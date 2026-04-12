@@ -1,0 +1,1271 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+<title>Mapa Electoral · Orden y Gestión · Baldwyn Mujica</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+:root {
+  --azul: #003087;
+  --azul2: #0047b8;
+  --rojo: #CC0000;
+  --rojo2: #ff1a1a;
+  --dorado: #FFD700;
+  --dorado2: #ffc000;
+  --blanco: #ffffff;
+  --gris-oscuro: #0d1117;
+  --gris-panel: rgba(10,15,30,0.92);
+  --verde: #00c853;
+  --naranja: #ff6d00;
+  --morado: #7c4dff;
+  --cyan: #00bcd4;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+html,body { width:100%; height:100%; overflow:hidden; font-family:'Rajdhani',sans-serif; }
+
+/* ─── MAP ─── */
+#map { position:absolute; inset:0; z-index:1; }
+
+/* ─── HEADER ─── */
+#header {
+  position:absolute; top:0; left:0; right:0; z-index:900;
+  transition: transform 0.4s cubic-bezier(.4,0,.2,1);
+}
+#header.collapsed { transform: translateY(-100%); }
+#header-inner {
+  background: linear-gradient(135deg, #001a4d 0%, #003087 40%, #8b0000 80%, #CC0000 100%);
+  border-bottom: 3px solid var(--dorado);
+  padding: 8px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 4px 30px rgba(0,0,0,0.6);
+  position: relative;
+}
+#header-inner::before {
+  content:'';
+  position:absolute;
+  inset:0;
+  background: url("data:image/svg+xml,%3Csvg width='40' height='40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 40L40 0M-10 10L10-10M30 50L50 30' stroke='rgba(255,215,0,0.05)' stroke-width='1'/%3E%3C/svg%3E");
+  pointer-events:none;
+}
+#escudo-img { height:52px; width:52px; object-fit:contain; filter:drop-shadow(0 0 8px rgba(255,215,0,0.6)); }
+#baldwyn-img { height:52px; width:52px; border-radius:50%; border:2px solid var(--dorado); object-fit:cover; filter:drop-shadow(0 0 8px rgba(255,215,0,0.5)); }
+#bandera-img { height:34px; border-radius:4px; box-shadow:0 2px 8px rgba(0,0,0,0.4); }
+#header-text { flex:1; }
+#header-title {
+  font-family:'Oswald',sans-serif;
+  font-size:clamp(0.9rem,2.5vw,1.3rem);
+  font-weight:700;
+  color:var(--dorado);
+  letter-spacing:2px;
+  text-shadow: 0 0 20px rgba(255,215,0,0.5);
+  line-height:1.2;
+}
+#header-sub {
+  font-size:clamp(0.65rem,1.5vw,0.82rem);
+  color:rgba(255,255,255,0.8);
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+  margin-top:2px;
+}
+#header-slogan {
+  font-size:clamp(0.6rem,1.2vw,0.75rem);
+  color:var(--dorado);
+  letter-spacing:3px;
+  text-transform:uppercase;
+  font-weight:600;
+  opacity:0.9;
+}
+
+/* ─── TOGGLE HEADER BTN ─── */
+#toggle-header {
+  position:absolute; z-index:901;
+  top:0; left:50%; transform:translateX(-50%);
+  background: linear-gradient(135deg,#003087,#CC0000);
+  border:2px solid var(--dorado);
+  color:var(--dorado);
+  width:44px; height:22px;
+  border-radius:0 0 22px 22px;
+  cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+  font-size:0.7rem;
+  transition:all 0.3s;
+  box-shadow:0 4px 12px rgba(0,0,0,0.5);
+}
+#toggle-header:hover { background:linear-gradient(135deg,#0047b8,#ff1a1a); }
+
+/* ─── PANEL CATEGORÍAS (inferior izquierdo) ─── */
+#panel-cats {
+  position:absolute; bottom:24px; left:12px; z-index:800;
+  background:var(--gris-panel);
+  border:1px solid rgba(255,215,0,0.3);
+  border-radius:14px;
+  padding:12px;
+  backdrop-filter:blur(12px);
+  min-width:190px;
+  box-shadow:0 8px 32px rgba(0,0,0,0.6);
+  transition:all 0.3s;
+}
+#panel-cats.collapsed .panel-body { display:none; }
+.panel-title {
+  font-family:'Oswald',sans-serif;
+  font-size:0.78rem;
+  color:var(--dorado);
+  letter-spacing:2px;
+  text-transform:uppercase;
+  display:flex; align-items:center; justify-content:space-between;
+  cursor:pointer; user-select:none;
+  margin-bottom:10px;
+}
+.panel-title i { font-size:0.7rem; color:rgba(255,215,0,0.6); }
+.cat-item {
+  display:flex; align-items:center; gap:8px;
+  padding:5px 0; cursor:pointer;
+  font-size:0.8rem; color:rgba(255,255,255,0.85);
+  transition:color 0.2s;
+}
+.cat-item:hover { color:#fff; }
+.cat-dot {
+  width:14px; height:14px; border-radius:50%;
+  border:2px solid rgba(255,255,255,0.3);
+  flex-shrink:0;
+  position:relative;
+}
+.cat-dot::after {
+  content:''; position:absolute; inset:2px;
+  border-radius:50%; background:rgba(255,255,255,0.2);
+}
+.cat-count {
+  margin-left:auto;
+  background:rgba(255,215,0,0.15);
+  color:var(--dorado);
+  padding:1px 6px;
+  border-radius:10px;
+  font-size:0.7rem;
+  font-weight:600;
+}
+#btn-toggle-all {
+  margin-top:8px; width:100%;
+  background:rgba(0,48,135,0.5);
+  border:1px solid rgba(255,215,0,0.3);
+  color:var(--dorado);
+  padding:5px 10px;
+  border-radius:8px;
+  cursor:pointer;
+  font-size:0.72rem;
+  font-family:'Rajdhani',sans-serif;
+  letter-spacing:1px;
+  transition:all 0.2s;
+}
+#btn-toggle-all:hover { background:rgba(0,48,135,0.8); }
+
+/* ─── PANEL CAPAS (inferior derecho) ─── */
+#panel-layers {
+  position:absolute; bottom:24px; right:12px; z-index:800;
+  background:var(--gris-panel);
+  border:1px solid rgba(255,215,0,0.3);
+  border-radius:14px;
+  padding:12px;
+  backdrop-filter:blur(12px);
+  min-width:170px;
+  box-shadow:0 8px 32px rgba(0,0,0,0.6);
+}
+.layer-btn {
+  display:flex; align-items:center; gap:8px;
+  padding:7px 10px; margin:4px 0;
+  border-radius:8px;
+  cursor:pointer;
+  font-size:0.8rem; color:rgba(255,255,255,0.8);
+  border:1px solid transparent;
+  transition:all 0.2s;
+}
+.layer-btn:hover, .layer-btn.active {
+  background:rgba(0,48,135,0.5);
+  border-color:rgba(255,215,0,0.4);
+  color:#fff;
+}
+.layer-btn.active { color:var(--dorado); }
+.layer-btn i { width:16px; text-align:center; color:var(--dorado); }
+#total-badge {
+  margin-top:10px;
+  background:rgba(255,215,0,0.1);
+  border:1px solid rgba(255,215,0,0.2);
+  border-radius:8px;
+  padding:6px 10px;
+  text-align:center;
+  font-size:0.75rem;
+  color:rgba(255,255,255,0.8);
+}
+#total-badge b { color:var(--dorado); font-size:0.9rem; }
+#btn-download {
+  margin-top:8px; width:100%;
+  background:linear-gradient(135deg,#003087,#CC0000);
+  border:1px solid var(--dorado);
+  color:var(--dorado);
+  padding:7px 10px;
+  border-radius:8px;
+  cursor:pointer;
+  font-size:0.75rem;
+  font-family:'Rajdhani',sans-serif;
+  letter-spacing:1px;
+  font-weight:600;
+  transition:all 0.2s;
+  display:flex; align-items:center; justify-content:center; gap:6px;
+}
+#btn-download:hover { transform:translateY(-1px); box-shadow:0 4px 16px rgba(204,0,0,0.4); }
+#btn-geo {
+  margin-top:4px; width:100%;
+  background:rgba(0,200,83,0.15);
+  border:1px solid rgba(0,200,83,0.3);
+  color:#00c853;
+  padding:6px 10px;
+  border-radius:8px;
+  cursor:pointer;
+  font-size:0.75rem;
+  font-family:'Rajdhani',sans-serif;
+  letter-spacing:1px;
+  transition:all 0.2s;
+  display:flex; align-items:center; justify-content:center; gap:6px;
+}
+#btn-geo:hover { background:rgba(0,200,83,0.3); }
+
+/* ─── PANEL MONITOREO (lateral derecho, colapsable) ─── */
+#panel-monitor {
+  position:absolute; top:0; right:0; bottom:0; z-index:850;
+  width:290px;
+  background:var(--gris-panel);
+  border-left:1px solid rgba(255,215,0,0.2);
+  backdrop-filter:blur(16px);
+  display:flex; flex-direction:column;
+  transform:translateX(100%);
+  transition:transform 0.4s cubic-bezier(.4,0,.2,1);
+  box-shadow:-8px 0 32px rgba(0,0,0,0.5);
+}
+#panel-monitor.open { transform:translateX(0); }
+#monitor-toggle {
+  position:absolute; left:-38px; top:50%; transform:translateY(-50%);
+  background:linear-gradient(135deg,#003087,#CC0000);
+  border:2px solid var(--dorado);
+  border-right:none;
+  color:var(--dorado);
+  width:38px; height:80px;
+  border-radius:12px 0 0 12px;
+  cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+  writing-mode:vertical-rl;
+  font-family:'Oswald',sans-serif;
+  font-size:0.65rem;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  box-shadow:-4px 0 16px rgba(0,0,0,0.4);
+  transition:all 0.2s;
+}
+#monitor-toggle:hover { background:linear-gradient(135deg,#0047b8,#ff1a1a); }
+#monitor-header {
+  background:linear-gradient(135deg,#001a4d,#8b0000);
+  padding:14px;
+  border-bottom:1px solid rgba(255,215,0,0.2);
+  display:flex; flex-direction:column; gap:8px;
+}
+#monitor-header h3 {
+  font-family:'Oswald',sans-serif;
+  font-size:0.88rem; color:var(--dorado); letter-spacing:2px;
+  display:flex; align-items:center; gap:8px;
+}
+#monitor-search {
+  width:100%;
+  background:rgba(255,255,255,0.08);
+  border:1px solid rgba(255,215,0,0.25);
+  border-radius:8px;
+  padding:7px 10px;
+  color:#fff;
+  font-size:0.8rem;
+  font-family:'Rajdhani',sans-serif;
+  outline:none;
+  transition:border 0.2s;
+}
+#monitor-search:focus { border-color:var(--dorado); }
+#monitor-search::placeholder { color:rgba(255,255,255,0.4); }
+#monitor-list {
+  flex:1; overflow-y:auto;
+  padding:8px;
+}
+#monitor-list::-webkit-scrollbar { width:4px; }
+#monitor-list::-webkit-scrollbar-thumb { background:rgba(255,215,0,0.3); border-radius:2px; }
+.monitor-item {
+  padding:9px 10px; border-radius:8px;
+  cursor:pointer; margin-bottom:4px;
+  border:1px solid rgba(255,255,255,0.06);
+  transition:all 0.2s;
+  display:flex; align-items:flex-start; gap:8px;
+}
+.monitor-item:hover { background:rgba(0,48,135,0.4); border-color:rgba(255,215,0,0.3); }
+.monitor-dot { width:10px; height:10px; border-radius:50%; margin-top:4px; flex-shrink:0; }
+.monitor-name { font-size:0.78rem; color:rgba(255,255,255,0.85); line-height:1.3; flex:1; }
+.monitor-meta { font-size:0.68rem; color:rgba(255,255,255,0.45); margin-top:2px; }
+.status-badge {
+  font-size:0.6rem; padding:2px 6px; border-radius:10px; font-weight:600; white-space:nowrap;
+}
+.s-activo { background:rgba(0,200,83,0.2); color:#00c853; }
+.s-pendiente { background:rgba(255,109,0,0.2); color:#ff6d00; }
+.s-incidencia { background:rgba(204,0,0,0.2); color:#ff4444; }
+.monitor-footer {
+  padding:10px;
+  border-top:1px solid rgba(255,215,0,0.1);
+  background:rgba(0,0,0,0.3);
+}
+.live-dot {
+  display:inline-block; width:8px; height:8px; border-radius:50%;
+  background:var(--verde); margin-right:6px;
+  animation:blink 1.2s infinite;
+}
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
+
+/* ─── POPUP STYLES ─── */
+.leaflet-popup-content-wrapper {
+  background:linear-gradient(145deg,#0a0f1e,#0d1b33) !important;
+  border:1px solid rgba(255,215,0,0.4) !important;
+  border-radius:14px !important;
+  box-shadow:0 12px 40px rgba(0,0,0,0.8) !important;
+  padding:0 !important;
+}
+.leaflet-popup-tip { background:#0a0f1e !important; }
+.leaflet-popup-close-button { color:var(--dorado) !important; font-size:1rem !important; top:8px !important; right:10px !important; }
+.popup-inner { padding:14px; max-width:280px; }
+.popup-header {
+  background:linear-gradient(135deg,#001a4d,#8b0000);
+  margin:-14px -14px 12px -14px;
+  padding:12px 14px;
+  border-radius:14px 14px 0 0;
+  border-bottom:2px solid var(--dorado);
+}
+.popup-center-name {
+  font-family:'Oswald',sans-serif;
+  font-size:0.88rem; color:var(--dorado);
+  letter-spacing:1px; line-height:1.3;
+  margin-bottom:6px;
+}
+.popup-badges { display:flex; gap:6px; flex-wrap:wrap; }
+.popup-badge {
+  font-size:0.65rem; padding:3px 8px; border-radius:10px;
+  font-weight:600; letter-spacing:0.5px;
+}
+.badge-mesas { background:rgba(0,188,212,0.2); color:#00bcd4; border:1px solid rgba(0,188,212,0.3); }
+.badge-votantes { background:rgba(255,215,0,0.15); color:var(--dorado); border:1px solid rgba(255,215,0,0.3); }
+.badge-zona { border:1px solid; font-size:0.63rem; }
+.popup-section-title {
+  font-family:'Oswald',sans-serif;
+  font-size:0.7rem; color:var(--dorado);
+  letter-spacing:2px; text-transform:uppercase;
+  margin:10px 0 6px; opacity:0.8;
+  display:flex; align-items:center; gap:6px;
+}
+.popup-section-title::after { content:''; flex:1; height:1px; background:rgba(255,215,0,0.2); }
+.popup-contact {
+  display:flex; align-items:flex-start; gap:8px;
+  padding:5px 0; border-bottom:1px solid rgba(255,255,255,0.05);
+  font-size:0.75rem;
+}
+.popup-contact:last-child { border-bottom:none; }
+.popup-role { color:rgba(255,255,255,0.5); font-size:0.67rem; line-height:1.2; }
+.popup-name { color:#fff; font-weight:600; font-size:0.78rem; }
+.popup-wa {
+  display:inline-flex; align-items:center; gap:4px;
+  background:rgba(37,211,102,0.15); color:#25D366;
+  border:1px solid rgba(37,211,102,0.3);
+  padding:3px 8px; border-radius:20px;
+  font-size:0.68rem; cursor:pointer; text-decoration:none;
+  transition:all 0.2s; white-space:nowrap; margin-top:3px;
+}
+.popup-wa:hover { background:rgba(37,211,102,0.3); }
+.mesa-grid { display:grid; grid-template-columns:1fr 1fr; gap:4px; }
+.mesa-item {
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.08);
+  border-radius:6px; padding:5px 7px;
+  font-size:0.67rem;
+}
+.mesa-num { color:var(--dorado); font-weight:700; font-size:0.65rem; margin-bottom:2px; }
+.mesa-person { color:#fff; font-size:0.68rem; }
+.mesa-tel { color:rgba(255,255,255,0.4); font-size:0.63rem; }
+.popup-actions { display:flex; gap:6px; margin-top:12px; }
+.btn-gmaps {
+  flex:1; padding:8px 10px;
+  background:linear-gradient(135deg,#003087,#0047b8);
+  border:1px solid rgba(255,215,0,0.3);
+  border-radius:8px; color:var(--dorado);
+  font-size:0.72rem; cursor:pointer;
+  font-family:'Rajdhani',sans-serif;
+  font-weight:600; letter-spacing:0.5px;
+  display:flex; align-items:center; justify-content:center; gap:5px;
+  transition:all 0.2s; text-decoration:none;
+}
+.btn-gmaps:hover { background:linear-gradient(135deg,#0047b8,#0066ff); }
+.btn-copy {
+  padding:8px 10px;
+  background:rgba(255,215,0,0.1);
+  border:1px solid rgba(255,215,0,0.3);
+  border-radius:8px; color:var(--dorado);
+  font-size:0.72rem; cursor:pointer;
+  font-family:'Rajdhani',sans-serif;
+  transition:all 0.2s;
+  display:flex; align-items:center; gap:5px;
+}
+.btn-copy:hover { background:rgba(255,215,0,0.2); }
+
+/* ─── CUSTOM MARKER ─── */
+.custom-marker {
+  width:36px; height:36px; border-radius:50% 50% 50% 0;
+  transform:rotate(-45deg);
+  border:3px solid rgba(255,255,255,0.9);
+  display:flex; align-items:center; justify-content:center;
+  box-shadow:0 4px 12px rgba(0,0,0,0.4);
+  position:relative;
+}
+.custom-marker::after {
+  content:''; position:absolute; inset:3px; border-radius:50%;
+  background:rgba(255,255,255,0.2);
+}
+.marker-num {
+  transform:rotate(45deg);
+  color:#fff; font-family:'Oswald',sans-serif;
+  font-weight:700; font-size:0.8rem;
+  text-shadow:0 1px 3px rgba(0,0,0,0.5);
+  z-index:1; position:relative;
+}
+@keyframes markerPulse {
+  0%,100%{ box-shadow:0 4px 12px rgba(0,0,0,0.4),0 0 0 0 rgba(255,215,0,0); }
+  50%{ box-shadow:0 4px 12px rgba(0,0,0,0.4),0 0 0 8px rgba(255,215,0,0.15); }
+}
+.custom-marker { animation:markerPulse 3s infinite; }
+
+/* ─── TOAST ─── */
+#toast {
+  position:absolute; bottom:100px; left:50%; transform:translateX(-50%);
+  background:rgba(10,15,30,0.95); border:1px solid var(--dorado);
+  color:var(--dorado); padding:10px 20px; border-radius:10px;
+  font-size:0.82rem; z-index:9999; opacity:0;
+  transition:opacity 0.3s; pointer-events:none; white-space:nowrap;
+}
+#toast.show { opacity:1; }
+
+/* ─── LIVE TICKER ─── */
+#live-ticker {
+  position:absolute; bottom:0; left:0; right:0; z-index:800;
+  background:linear-gradient(135deg,rgba(0,26,77,0.95),rgba(139,0,0,0.95));
+  border-top:2px solid var(--dorado);
+  padding:5px 16px;
+  display:flex; align-items:center; gap:12px;
+  font-size:0.72rem; color:rgba(255,255,255,0.85);
+  backdrop-filter:blur(8px);
+}
+#live-ticker .ticker-label {
+  font-family:'Oswald',sans-serif;
+  color:var(--dorado); letter-spacing:2px; white-space:nowrap;
+  font-size:0.7rem;
+  display:flex; align-items:center; gap:6px;
+}
+#ticker-text {
+  flex:1; overflow:hidden; white-space:nowrap;
+  animation:tickerScroll 20s linear infinite;
+}
+@keyframes tickerScroll {
+  0%{ transform:translateX(100%); }
+  100%{ transform:translateX(-100%); }
+}
+
+/* ─── LOADING ─── */
+#loading {
+  position:fixed; inset:0; z-index:9999;
+  background:linear-gradient(135deg,#001a4d,#0d1117,#8b0000);
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  transition:opacity 0.8s;
+}
+#loading.fade { opacity:0; pointer-events:none; }
+.loading-shield { width:80px; height:80px; animation:spin 2s linear infinite; }
+@keyframes spin { to{transform:rotate(360deg)} }
+.loading-text {
+  font-family:'Oswald',sans-serif; font-size:1.1rem;
+  color:var(--dorado); letter-spacing:4px; margin-top:20px;
+  animation:pulse 1.5s ease-in-out infinite;
+}
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+.loading-sub { color:rgba(255,255,255,0.5); font-size:0.75rem; margin-top:8px; letter-spacing:2px; }
+
+/* ─── RESPONSIVE ─── */
+@media(max-width:768px) {
+  #header.auto-collapsed { transform:translateY(-100%); }
+  #panel-monitor { width:260px; }
+  #panel-cats { bottom:60px; left:8px; min-width:160px; }
+  #panel-layers { bottom:60px; right:8px; min-width:150px; }
+  #live-ticker { bottom:0; }
+}
+@media(max-width:480px) {
+  #panel-cats, #panel-layers { padding:8px; }
+  .panel-title { font-size:0.7rem; }
+  .cat-item { font-size:0.72rem; }
+  #panel-monitor { width:240px; }
+}
+</style>
+</head>
+<body>
+
+<!-- LOADING -->
+<div id="loading">
+  <img class="loading-shield" src="https://github.com/jhonmalorne/calculadora-electrica/blob/main/Escudo_Los_Guayos_Carabobo.png?raw=true" alt="Escudo" onerror="this.style.display='none'"/>
+  <div class="loading-text">CARGANDO MAPA</div>
+  <div class="loading-sub">ORDEN Y GESTIÓN · BALDWYN MUJICA</div>
+</div>
+
+<!-- MAP -->
+<div id="map"></div>
+
+<!-- TOGGLE HEADER -->
+<button id="toggle-header" onclick="toggleHeader()" title="Mostrar/Ocultar encabezado">
+  <i class="fas fa-chevron-up" id="toggle-icon"></i>
+</button>
+
+<!-- HEADER -->
+<div id="header">
+  <div id="header-inner">
+    <img id="escudo-img" src="https://github.com/jhonmalorne/calculadora-electrica/blob/main/Escudo_Los_Guayos_Carabobo.png?raw=true" alt="Escudo Los Guayos" onerror="this.style.display='none'"/>
+    <div id="header-text">
+      <div id="header-title">⚡ MAPA ESTRATÉGICO ELECTORAL</div>
+      <div id="header-sub">Municipio Los Guayos · Estado Carabobo · Venezuela</div>
+      <div id="header-slogan">Orden y Gestión · Baldwyn Mujica</div>
+    </div>
+    <img id="bandera-img" src="https://github.com/jhonmalorne/calculadora-electrica/blob/main/Bandera_Los_Guayos_Carabobo.png?raw=true" alt="Bandera" onerror="this.style.display='none'"/>
+    <img id="baldwyn-img" src="https://github.com/jhonmalorne/calculadora-electrica/blob/main/Screenshot_19.jpg?raw=true" alt="Baldwyn Mujica" onerror="this.style.display='none'"/>
+  </div>
+</div>
+
+<!-- PANEL CATEGORÍAS -->
+<div id="panel-cats">
+  <div class="panel-title" onclick="togglePanel('panel-cats')">
+    <span><i class="fas fa-layer-group" style="margin-right:6px;color:var(--dorado)"></i>CATEGORÍAS</span>
+    <i class="fas fa-chevron-down" id="cats-icon"></i>
+  </div>
+  <div class="panel-body" id="cats-body"></div>
+</div>
+
+<!-- PANEL CAPAS -->
+<div id="panel-layers">
+  <div class="panel-title">
+    <span><i class="fas fa-map" style="margin-right:6px;color:var(--dorado)"></i>CAPAS</span>
+  </div>
+  <div>
+    <div class="layer-btn active" id="btn-standard" onclick="setLayer('standard')">
+      <i class="fas fa-map-marked-alt"></i> Mapa Estándar
+    </div>
+    <div class="layer-btn" id="btn-satellite" onclick="setLayer('satellite')">
+      <i class="fas fa-satellite"></i> Vista Satelital
+    </div>
+    <button id="btn-geo" onclick="geolocate()">
+      <i class="fas fa-crosshairs"></i> Mi Ubicación
+    </button>
+    <div id="total-badge"></div>
+    <button id="btn-download" onclick="downloadMap()">
+      <i class="fas fa-download"></i> Descargar Mapa
+    </button>
+  </div>
+</div>
+
+<!-- PANEL MONITOREO -->
+<div id="panel-monitor">
+  <button id="monitor-toggle" onclick="toggleMonitor()">
+    <i class="fas fa-radar" style="margin-bottom:4px"></i>
+    MONITOREO
+  </button>
+  <div id="monitor-header">
+    <h3><span class="live-dot"></span>CONTROL EN TIEMPO REAL</h3>
+    <input type="text" id="monitor-search" placeholder="🔍 Buscar centro..." oninput="filterMonitor(this.value)"/>
+  </div>
+  <div id="monitor-list"></div>
+  <div class="monitor-footer">
+    <span style="font-size:0.7rem;color:rgba(255,255,255,0.5)">
+      <span class="live-dot"></span>Sistema activo · Día D
+    </span>
+  </div>
+</div>
+
+<!-- LIVE TICKER -->
+<div id="live-ticker">
+  <div class="ticker-label"><span class="live-dot"></span>EN VIVO</div>
+  <div id="ticker-text">⚡ ESTRATEGIA ELECTORAL ORDEN Y GESTIÓN · BALDWYN MUJICA · MUNICIPIO LOS GUAYOS · CARABOBO · VENEZUELA · Monitoreo en tiempo real · Todos los centros activos · ¡Éxito al equipo de trabajo! ⚡</div>
+</div>
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<script>
+// ══════════════════════════════════════════════
+// DATOS: CENTROS DE VOTACIÓN
+// ══════════════════════════════════════════════
+const ZONAS = {
+  'Norte': { color:'#e74c3c', label:'Zona Norte' },
+  'Sur':   { color:'#3498db', label:'Zona Sur' },
+  'Este':  { color:'#2ecc71', label:'Zona Este' },
+  'Oeste': { color:'#f39c12', label:'Zona Oeste' },
+  'Centro':{ color:'#9b59b6', label:'Zona Centro' },
+};
+
+const CENTROS = [
+  {
+    id:1, lat:10.17582273, lng:-67.93876326,
+    nombre:"UNIDAD EDUCATIVA SANTÍSIMA TRINIDAD",
+    mesas:5, votantes:4106, zona:'Centro',
+    estado:'activo',
+    equipo:{
+      coordinadorMesa:{ nombre:"José Alfaro", tel:"04244525765" },
+      coordinadorPolitico:{ nombre:"María Vallejos", tel:"04244525765" },
+      coordinadorAlimentacion:{ nombre:"Andrés Olavarrieta", tel:"04244525765" },
+      mesas:[
+        { n:1, m:{ nombre:"Ángel Mathias", tel:"04244525765" }, a:{ nombre:"Ángel Mathias", tel:"04244525765" } },
+        { n:2, m:{ nombre:"Ángel Mathias", tel:"04244525765" }, a:{ nombre:"Ángel Mathias", tel:"04244525765" } },
+        { n:3, m:{ nombre:"Ángel Mathias", tel:"04244525765" }, a:{ nombre:"Ángel Mathias", tel:"04244525765" } },
+        { n:4, m:{ nombre:"Ángel Mathias", tel:"04244525765" }, a:{ nombre:"Ángel Mathias", tel:"04244525765" } },
+        { n:5, m:{ nombre:"Ángel Mathias", tel:"04244525765" }, a:{ nombre:"Ángel Mathias", tel:"04244525765" } },
+      ]
+    }
+  },
+  {
+    id:2, lat:10.180, lng:-67.940,
+    nombre:"ESCUELA BÁSICA LIBERTADOR",
+    mesas:4, votantes:3240, zona:'Norte',
+    estado:'activo',
+    equipo:{
+      coordinadorMesa:{ nombre:"Pedro González", tel:"04244525765" },
+      coordinadorPolitico:{ nombre:"Ana Martínez", tel:"04244525765" },
+      coordinadorAlimentacion:{ nombre:"Luis Hernández", tel:"04244525765" },
+      mesas:[
+        { n:1, m:{ nombre:"Carlos Pérez", tel:"04244525765" }, a:{ nombre:"Rosa López", tel:"04244525765" } },
+        { n:2, m:{ nombre:"José Ramos", tel:"04244525765" }, a:{ nombre:"María Torres", tel:"04244525765" } },
+        { n:3, m:{ nombre:"Antonio Silva", tel:"04244525765" }, a:{ nombre:"Elena Castro", tel:"04244525765" } },
+        { n:4, m:{ nombre:"Miguel Ruiz", tel:"04244525765" }, a:{ nombre:"Carmen Vargas", tel:"04244525765" } },
+      ]
+    }
+  },
+  {
+    id:3, lat:10.165, lng:-67.930,
+    nombre:"LICEO SIMÓN BOLÍVAR",
+    mesas:6, votantes:4890, zona:'Sur',
+    estado:'pendiente',
+    equipo:{
+      coordinadorMesa:{ nombre:"Ramón Díaz", tel:"04244525765" },
+      coordinadorPolitico:{ nombre:"Luisa Blanco", tel:"04244525765" },
+      coordinadorAlimentacion:{ nombre:"Roberto Mora", tel:"04244525765" },
+      mesas:[
+        { n:1, m:{ nombre:"Fernando Gil", tel:"04244525765" }, a:{ nombre:"Patricia Núñez", tel:"04244525765" } },
+        { n:2, m:{ nombre:"Diego Medina", tel:"04244525765" }, a:{ nombre:"Sandra Reyes", tel:"04244525765" } },
+        { n:3, m:{ nombre:"Jesús Paredes", tel:"04244525765" }, a:{ nombre:"Mónica Fuentes", tel:"04244525765" } },
+        { n:4, m:{ nombre:"Andrés Salazar", tel:"04244525765" }, a:{ nombre:"Diana Peña", tel:"04244525765" } },
+        { n:5, m:{ nombre:"Rodrigo Vega", tel:"04244525765" }, a:{ nombre:"Valeria Soto", tel:"04244525765" } },
+        { n:6, m:{ nombre:"Héctor Campos", tel:"04244525765" }, a:{ nombre:"Yolanda Cruz", tel:"04244525765" } },
+      ]
+    }
+  },
+  {
+    id:4, lat:10.185, lng:-67.945,
+    nombre:"ESCUELA NACIONAL CARABOBO",
+    mesas:3, votantes:2180, zona:'Oeste',
+    estado:'activo',
+    equipo:{
+      coordinadorMesa:{ nombre:"Nelson Arroyo", tel:"04244525765" },
+      coordinadorPolitico:{ nombre:"Gisela Pinto", tel:"04244525765" },
+      coordinadorAlimentacion:{ nombre:"Oswaldo Rivas", tel:"04244525765" },
+      mesas:[
+        { n:1, m:{ nombre:"César Molina", tel:"04244525765" }, a:{ nombre:"Irene Cabrera", tel:"04244525765" } },
+        { n:2, m:{ nombre:"Gustavo Leal", tel:"04244525765" }, a:{ nombre:"Nora Delgado", tel:"04244525765" } },
+        { n:3, m:{ nombre:"Wilmer Ortega", tel:"04244525765" }, a:{ nombre:"Rebeca Flores", tel:"04244525765" } },
+      ]
+    }
+  },
+  {
+    id:5, lat:10.170, lng:-67.950,
+    nombre:"UNIDAD EDUCATIVA FE Y ALEGRÍA",
+    mesas:5, votantes:3760, zona:'Oeste',
+    estado:'activo',
+    equipo:{
+      coordinadorMesa:{ nombre:"Ernesto Suárez", tel:"04244525765" },
+      coordinadorPolitico:{ nombre:"Beatriz Aguilar", tel:"04244525765" },
+      coordinadorAlimentacion:{ nombre:"Pablo Jiménez", tel:"04244525765" },
+      mesas:[
+        { n:1, m:{ nombre:"Ricardo Bermúdez", tel:"04244525765" }, a:{ nombre:"Liliana Guerrero", tel:"04244525765" } },
+        { n:2, m:{ nombre:"Alfredo Morales", tel:"04244525765" }, a:{ nombre:"Claudia Ríos", tel:"04244525765" } },
+        { n:3, m:{ nombre:"Vicente Mendoza", tel:"04244525765" }, a:{ nombre:"Esperanza Guzmán", tel:"04244525765" } },
+        { n:4, m:{ nombre:"Ignacio Domínguez", tel:"04244525765" }, a:{ nombre:"Adriana Cortés", tel:"04244525765" } },
+        { n:5, m:{ nombre:"Sergio Herrera", tel:"04244525765" }, a:{ nombre:"Natalia Ibáñez", tel:"04244525765" } },
+      ]
+    }
+  },
+  {
+    id:6, lat:10.155, lng:-67.935,
+    nombre:"ESCUELA TÉCNICA INDUSTRIAL",
+    mesas:4, votantes:2950, zona:'Sur',
+    estado:'incidencia',
+    equipo:{
+      coordinadorMesa:{ nombre:"Orlando Pacheco", tel:"04244525765" },
+      coordinadorPolitico:{ nombre:"Miriam Castellano", tel:"04244525765" },
+      coordinadorAlimentacion:{ nombre:"Héctor Bravo", tel:"04244525765" },
+      mesas:[
+        { n:1, m:{ nombre:"Juan Navarro", tel:"04244525765" }, a:{ nombre:"Daniela Rojas", tel:"04244525765" } },
+        { n:2, m:{ nombre:"Manuel Serrano", tel:"04244525765" }, a:{ nombre:"Sofía Peralta", tel:"04244525765" } },
+        { n:3, m:{ nombre:"Francisco Vidal", tel:"04244525765" }, a:{ nombre:"Verónica Meza", tel:"04244525765" } },
+        { n:4, m:{ nombre:"Arturo Santamaría", tel:"04244525765" }, a:{ nombre:"Camila Espinoza", tel:"04244525765" } },
+      ]
+    }
+  },
+  {
+    id:7, lat:10.190, lng:-67.930,
+    nombre:"LICEO ANDRÉS BELLO",
+    mesas:7, votantes:5420, zona:'Norte',
+    estado:'activo',
+    equipo:{
+      coordinadorMesa:{ nombre:"Teodoro Alvarado", tel:"04244525765" },
+      coordinadorPolitico:{ nombre:"Gloria Zamora", tel:"04244525765" },
+      coordinadorAlimentacion:{ nombre:"Enrique Vásquez", tel:"04244525765" },
+      mesas:[
+        { n:1, m:{ nombre:"Simón Escalona", tel:"04244525765" }, a:{ nombre:"Lucía Acosta", tel:"04244525765" } },
+        { n:2, m:{ nombre:"Raúl Montoya", tel:"04244525765" }, a:{ nombre:"Gabriela Osorio", tel:"04244525765" } },
+        { n:3, m:{ nombre:"Iván Palacios", tel:"04244525765" }, a:{ nombre:"Marcela Quintero", tel:"04244525765" } },
+        { n:4, m:{ nombre:"Darwin Serret", tel:"04244525765" }, a:{ nombre:"Paola Vera", tel:"04244525765" } },
+        { n:5, m:{ nombre:"Bladimir Calvo", tel:"04244525765" }, a:{ nombre:"Ingrid Salas", tel:"04244525765" } },
+        { n:6, m:{ nombre:"Oswaldo Piñango", tel:"04244525765" }, a:{ nombre:"Fabiola Colmenares", tel:"04244525765" } },
+        { n:7, m:{ nombre:"Freddy Contreras", tel:"04244525765" }, a:{ nombre:"Xiomara Arrieche", tel:"04244525765" } },
+      ]
+    }
+  },
+  {
+    id:8, lat:10.162, lng:-67.920,
+    nombre:"ESCUELA ESTADAL LOS GUAYOS",
+    mesas:3, votantes:2100, zona:'Este',
+    estado:'activo',
+    equipo:{
+      coordinadorMesa:{ nombre:"Wilfredo Tovar", tel:"04244525765" },
+      coordinadorPolitico:{ nombre:"Amarilis Cordero", tel:"04244525765" },
+      coordinadorAlimentacion:{ nombre:"Eliezer Bonilla", tel:"04244525765" },
+      mesas:[
+        { n:1, m:{ nombre:"Marlon Figueroa", tel:"04244525765" }, a:{ nombre:"Karelis Urbina", tel:"04244525765" } },
+        { n:2, m:{ nombre:"Yordan Marcano", tel:"04244525765" }, a:{ nombre:"Yalitza Rangel", tel:"04244525765" } },
+        { n:3, m:{ nombre:"Edixon Centeno", tel:"04244525765" }, a:{ nombre:"Keyla Aparicio", tel:"04244525765" } },
+      ]
+    }
+  },
+  {
+    id:9, lat:10.175, lng:-67.920,
+    nombre:"CASA DE LA CULTURA MUNICIPAL",
+    mesas:2, votantes:1580, zona:'Este',
+    estado:'pendiente',
+    equipo:{
+      coordinadorMesa:{ nombre:"Darío Useche", tel:"04244525765" },
+      coordinadorPolitico:{ nombre:"Zaida Navas", tel:"04244525765" },
+      coordinadorAlimentacion:{ nombre:"Isidoro Colina", tel:"04244525765" },
+      mesas:[
+        { n:1, m:{ nombre:"Yoserlin Moros", tel:"04244525765" }, a:{ nombre:"Adriangela Linares", tel:"04244525765" } },
+        { n:2, m:{ nombre:"Henrrique Rivero", tel:"04244525765" }, a:{ nombre:"Daniela Quijada", tel:"04244525765" } },
+      ]
+    }
+  },
+  {
+    id:10, lat:10.178, lng:-67.955,
+    nombre:"CENTRO COMUNITARIO SIMÓN RODRÍGUEZ",
+    mesas:4, votantes:3010, zona:'Oeste',
+    estado:'activo',
+    equipo:{
+      coordinadorMesa:{ nombre:"Alirio Montilla", tel:"04244525765" },
+      coordinadorPolitico:{ nombre:"Rosibel Méndez", tel:"04244525765" },
+      coordinadorAlimentacion:{ nombre:"Calixto Piña", tel:"04244525765" },
+      mesas:[
+        { n:1, m:{ nombre:"Jonatan Espejo", tel:"04244525765" }, a:{ nombre:"Oriana Gámez", tel:"04244525765" } },
+        { n:2, m:{ nombre:"Geovanny Cedeño", tel:"04244525765" }, a:{ nombre:"Yennifer Bastidas", tel:"04244525765" } },
+        { n:3, m:{ nombre:"Delvis Urdaneta", tel:"04244525765" }, a:{ nombre:"Lisbeth Alviárez", tel:"04244525765" } },
+        { n:4, m:{ nombre:"Rubén Sequera", tel:"04244525765" }, a:{ nombre:"Mariangel Briceño", tel:"04244525765" } },
+      ]
+    }
+  },
+];
+
+// LÍMITE MUNICIPAL
+const limiteCoords = [
+  [10.209083747610128,-67.91127684975459],[10.206527525312698,-67.91100137490947],
+  [10.212586321145846,-67.91235077093202],[10.210432307328059,-67.91432487671563],
+  [10.207560266215832,-67.91848766499842],[10.206926724180223,-67.91870224200103],
+  [10.203716758811204,-67.92265045356822],[10.200760182980076,-67.92685615735161],
+  [10.196620930842732,-67.93252098276312],[10.193664289241944,-67.93758499332628],
+  [10.190876573404372,-67.94230568122039],[10.18694838706836,-67.95088875010374],
+  [10.186145848429986,-67.95526611510215],[10.185089873460145,-67.95462238495533],
+  [10.181626251018136,-67.95402157015162],[10.182133124944214,-67.94915067870731],
+  [10.17997890518864,-67.9470263691435],[10.175923863770995,-67.94359314155811],
+  [10.170474820764458,-67.94067489813597],[10.169228708681796,-67.93762790864201],
+  [10.167391212594463,-67.9358898372456],[10.166271813215332,-67.93073999596662],
+  [10.163821793308857,-67.92898046684334],[10.160484667153899,-67.92925941657364],
+  [10.160146728385515,-67.92923795890208],[10.159660940780196,-67.92934524725989],
+  [10.159301879821893,-67.9291735858807],[10.158668241994162,-67.9293452472532],
+  [10.15769666155296,-67.92898046683666],[10.151465803720669,-67.92438852504281],
+  [10.150367470336896,-67.92419540595968],[10.149670449190307,-67.9238520832147],
+  [10.147283668311443,-67.92357313348441],[10.146671128756063,-67.92290794566601],
+  [10.145319313110654,-67.92307960702512],[10.144453303255602,-67.92194235043239],
+  [10.144242080984439,-67.92119133192776],[10.143228212143553,-67.92022573670754],
+  [10.14240444125379,-67.91996824455279],[10.139743013431438,-67.91664230546085],
+  [10.138813620729131,-67.9161273213434],[10.13756738526857,-67.91589128687696],
+  [10.137018195268585,-67.91623460962194],[10.136659108990484,-67.91632044030818],
+  [10.135117145693535,-67.91769373128807],[10.134652442971223,-67.91780101964588],
+  [10.132709133378766,-67.91870224185143],[10.132624641390136,-67.91913139528265],
+  [10.131821966387527,-67.91975366775792],[10.131674104983656,-67.92037594023317],
+  [10.130871427495572,-67.92046177093673],[10.129329436360663,-67.92029010956423],
+  [10.124154206364205,-67.92501079743494],[10.11847191893599,-67.92456018634948],
+  [10.112831779474227,-67.92466747473576],[10.111141830808938,-67.92507517049542],
+  [10.110423599825694,-67.92509662812846],[10.10894488414669,-67.9245172709963],
+  [10.097727547870177,-67.92438852497811],[10.097009286944402,-67.92245733442823],
+  [10.098234554471412,-67.91996824452718],[10.096713532014665,-67.91318762031396],
+  [10.094791118315447,-67.91084873397705],[10.089594206205353,-67.90833818630618],
+  [10.089742086976688,-67.89898264136218],[10.091854662016654,-67.89430486880227],
+  [10.092425054892002,-67.89147245615622],[10.094875620219776,-67.88831817831453],
+  [10.097748673066574,-67.87486421798185],[10.10093857666085,-67.87055122588646],
+  [10.101530078479591,-67.87359821524811],[10.102882078551435,-67.87387716497838],
+  [10.10478331903489,-67.87439214909585],[10.106388802386748,-67.876666662403],
+  [10.10607193133602,-67.87743913857919],[10.106050806588208,-67.87840473379941],
+  [10.106536675436853,-67.87941324436278],[10.110803839859535,-67.88147318083261],
+  [10.112578287678204,-67.88288938716065],[10.114268228786853,-67.88325416757718],
+  [10.115049823542561,-67.88381206703777],[10.11545118227256,-67.88473474691487],
+  [10.125780716179223,-67.88821088978649],[10.126477789295363,-67.8873954982672],
+  [10.132286673090952,-67.88692342950569],[10.138095451677966,-67.88754570198432],
+  [10.13970076825058,-67.88688051416592],[10.13985622340783,-67.88271114431488],
+  [10.136556941958062,-67.88109172405622],[10.135187977221667,-67.88153632702556],
+  [10.13501430119527,-67.88147661456705],[10.13489482509524,-67.88151751825346],
+  [10.134475668250063,-67.88148600229877],[10.133854304338376,-67.88210072417085],
+  [10.133801741690949,-67.88160391249434],[10.131170911786635,-67.8818330992092],
+  [10.131747434419093,-67.87876426750812],[10.132765955206978,-67.87623423828646],
+  [10.13395742826141,-67.87499655424858],[10.135590892207327,-67.86487253304712],
+  [10.136159720043874,-67.86420879080516],[10.137404988266423,-67.86483348935755],
+  [10.137454952644715,-67.86627810481001],[10.137720147984668,-67.86725810066623],
+  [10.138304345647471,-67.86896821301113],[10.139522701820036,-67.8704401590044],
+  [10.140160703533864,-67.87332158113867],[10.140268318168603,-67.87343871215144],
+  [10.143085502293122,-67.87496531925564],[10.143669690197513,-67.87573838375748],
+  [10.143654316850242,-67.87734698257864],[10.144061710414604,-67.87952171447971],
+  [10.14383495368455,-67.88052513653172],[10.143856984035997,-67.87997343025863],
+  [10.143907335104931,-67.880665384548],[10.14393530791991,-67.88112858188158],
+  [10.143627606846776,-67.88147100690347],[10.143321304121313,-67.88200950932371],
+  [10.14217581325373,-67.88268299256256],[10.140124762287636,-67.88276875290505],
+  [10.139941799982186,-67.88601632895606],[10.140447440976354,-67.88633398987885],
+  [10.141032919011279,-67.88629681679275],[10.141575150555067,-67.88667530639668],
+  [10.143774006538564,-67.88590818905898],[10.147757375760186,-67.88435834118235],
+  [10.147727437197162,-67.88382102111963],[10.148525797945956,-67.88377708926997],
+  [10.149270932845052,-67.88285452083325],[10.151813569927725,-67.88357091692073],
+  [10.152927933689867,-67.88373650612702],[10.15302772728089,-67.88440224234823],
+  [10.153400289695341,-67.88541267441585],[10.155159975984638,-67.88469286828602],
+  [10.156094701438466,-67.88471990325873],[10.156304265840756,-67.88494970051825],
+  [10.158030672146317,-67.88489563057949],[10.15830343686954,-67.8846387983437],
+  [10.159866839760781,-67.886848907362],[10.161224000329616,-67.88816686225584],
+  [10.163213161541732,-67.88910632752992],[10.164836414323368,-67.889471299648],
+  [10.170477818974122,-67.89291825861989],[10.173245264086605,-67.89405372748949],
+  [10.176252172433573,-67.89435787091384],[10.17880003943691,-67.89397262255865],
+  [10.18149423698287,-67.89389151763402],[10.183290356039556,-67.89322916081724],
+  [10.185126378399106,-67.89331026576653],[10.186097603347065,-67.89839959933771],
+  [10.18794691389124,-67.89951479191633],[10.191445939711665,-67.90015687249334],
+  [10.197173349670685,-67.90369845386108],[10.198596871149675,-67.90715893034303],
+  [10.201058084848738,-67.90638167489952],[10.20519554172376,-67.90938931555779],
+  [10.206505946931202,-67.91099789644403],[10.209238540893097,-67.91129658143669],
+];
+
+// ══════════════════════════════════════════════
+// INICIALIZAR MAPA
+// ══════════════════════════════════════════════
+const map = L.map('map', {
+  center: [10.175, -67.935],
+  zoom: 14,
+  zoomControl: true,
+  attributionControl: true,
+});
+
+// Tiles
+const tileStandard = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  attribution:'&copy; OpenStreetMap | Estrategia Electoral Orden y Gestión',
+  maxZoom:19
+});
+const tileSatellite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+  attribution:'&copy; Esri | Estrategia Electoral Orden y Gestión',
+  maxZoom:19
+});
+tileStandard.addTo(map);
+
+// Mover zoom
+map.zoomControl.setPosition('topright');
+
+// LÍMITE MUNICIPAL
+L.polyline(limiteCoords, {
+  color:'#003087', weight:3, opacity:0.85,
+  dashArray:'8,4',
+}).addTo(map);
+
+// Relleno translúcido del municipio
+L.polygon(limiteCoords, {
+  color:'#003087', weight:1,
+  fillColor:'#003087', fillOpacity:0.05,
+}).addTo(map);
+
+// ══════════════════════════════════════════════
+// CREAR MARCADORES
+// ══════════════════════════════════════════════
+let markers = {};
+let activeZones = new Set(Object.keys(ZONAS));
+let layerGroups = {};
+
+Object.keys(ZONAS).forEach(z => { layerGroups[z] = L.layerGroup().addTo(map); });
+
+function waLink(tel) {
+  const num = tel.replace(/\D/g,'');
+  const intl = num.startsWith('0') ? '58'+num.slice(1) : num;
+  return `https://wa.me/${intl}`;
+}
+
+function buildPopup(c) {
+  const zona = ZONAS[c.zona];
+  const statusClass = { activo:'s-activo', pendiente:'s-pendiente', incidencia:'s-incidencia' }[c.estado];
+  const statusLabel = { activo:'🟢 Activo', pendiente:'🟡 Pendiente', incidencia:'🔴 Incidencia' }[c.estado];
+
+  let mesasHtml = '<div class="mesa-grid">';
+  c.equipo.mesas.forEach(m => {
+    mesasHtml += `
+      <div class="mesa-item">
+        <div class="mesa-num">MESA ${m.n}</div>
+        <div class="mesa-person">${m.m.nombre}</div>
+        <div class="mesa-tel"><a href="${waLink(m.m.tel)}" target="_blank" class="popup-wa" style="font-size:0.6rem;padding:2px 5px"><i class="fab fa-whatsapp"></i>${m.m.tel}</a></div>
+        <div class="mesa-person" style="margin-top:3px;color:rgba(255,255,255,0.6);font-size:0.65rem">Adj: ${m.a.nombre}</div>
+      </div>`;
+  });
+  mesasHtml += '</div>';
+
+  return `
+  <div class="popup-inner">
+    <div class="popup-header">
+      <div class="popup-center-name">📍 ${c.nombre}</div>
+      <div class="popup-badges">
+        <span class="popup-badge badge-mesas"><i class="fas fa-table"></i> ${c.mesas} Mesas</span>
+        <span class="popup-badge badge-votantes"><i class="fas fa-users"></i> ${c.votantes.toLocaleString()} Votantes</span>
+        <span class="popup-badge badge-zona status-badge ${statusClass}">${statusLabel}</span>
+        <span class="popup-badge badge-zona" style="color:${zona.color};border-color:${zona.color}">${zona.label}</span>
+      </div>
+    </div>
+
+    <div class="popup-section-title">Coordinación</div>
+
+    <div class="popup-contact">
+      <div style="flex:1">
+        <div class="popup-role">🧑‍💼 Coordinador de Mesa</div>
+        <div class="popup-name">${c.equipo.coordinadorMesa.nombre}</div>
+        <a href="${waLink(c.equipo.coordinadorMesa.tel)}" target="_blank" class="popup-wa">
+          <i class="fab fa-whatsapp"></i>${c.equipo.coordinadorMesa.tel}
+        </a>
+      </div>
+    </div>
+    <div class="popup-contact">
+      <div style="flex:1">
+        <div class="popup-role">👤 Coordinador Político</div>
+        <div class="popup-name">${c.equipo.coordinadorPolitico.nombre}</div>
+        <a href="${waLink(c.equipo.coordinadorPolitico.tel)}" target="_blank" class="popup-wa">
+          <i class="fab fa-whatsapp"></i>${c.equipo.coordinadorPolitico.tel}
+        </a>
+      </div>
+    </div>
+    <div class="popup-contact">
+      <div style="flex:1">
+        <div class="popup-role">🍽️ Coordinador Alimentación</div>
+        <div class="popup-name">${c.equipo.coordinadorAlimentacion.nombre}</div>
+        <a href="${waLink(c.equipo.coordinadorAlimentacion.tel)}" target="_blank" class="popup-wa">
+          <i class="fab fa-whatsapp"></i>${c.equipo.coordinadorAlimentacion.tel}
+        </a>
+      </div>
+    </div>
+
+    <div class="popup-section-title">Miembros de Mesa</div>
+    ${mesasHtml}
+
+    <div class="popup-actions">
+      <a href="https://www.google.com/maps?q=${c.lat},${c.lng}" target="_blank" class="btn-gmaps">
+        <i class="fas fa-map-marker-alt"></i> Ver en Google Maps
+      </a>
+      <button class="btn-copy" onclick="copyCoords(${c.lat},${c.lng})">
+        <i class="fas fa-copy"></i> GPS
+      </button>
+    </div>
+  </div>`;
+}
+
+function createMarker(c) {
+  const zona = ZONAS[c.zona];
+  const icon = L.divIcon({
+    className:'',
+    html:`<div class="custom-marker" style="background:${zona.color}">
+      <span class="marker-num">${c.id}</span>
+    </div>`,
+    iconSize:[36,36],
+    iconAnchor:[18,36],
+    popupAnchor:[0,-36]
+  });
+
+  const marker = L.marker([c.lat, c.lng], { icon })
+    .bindPopup(buildPopup(c), {
+      maxWidth:300, minWidth:280,
+      className:'electoral-popup',
+      autoPan:true, autoPanPaddingTopLeft:[10,80],
+    });
+
+  marker.on('click', () => {
+    highlightMonitorItem(c.id);
+  });
+
+  layerGroups[c.zona].addLayer(marker);
+  markers[c.id] = marker;
+}
+
+CENTROS.forEach(c => createMarker(c));
+
+// ══════════════════════════════════════════════
+// PANEL CATEGORÍAS
+// ══════════════════════════════════════════════
+function renderCats() {
+  const body = document.getElementById('cats-body');
+  let html = '';
+  Object.entries(ZONAS).forEach(([key, zona]) => {
+    const count = CENTROS.filter(c => c.zona === key).length;
+    const active = activeZones.has(key);
+    html += `<div class="cat-item" onclick="toggleZone('${key}')">
+      <div class="cat-dot" style="background:${active?zona.color:'transparent'};border-color:${zona.color}60"></div>
+      <span style="color:${active?'rgba(255,255,255,0.9)':'rgba(255,255,255,0.4)'}">${zona.label}</span>
+      <span class="cat-count">${count}</span>
+    </div>`;
+  });
+  html += `<button id="btn-toggle-all" onclick="toggleAllZones()">
+    ${activeZones.size === Object.keys(ZONAS).length ? 'Ocultar Todos' : 'Mostrar Todos'}
+  </button>`;
+  body.innerHTML = html;
+}
+
+function toggleZone(key) {
+  if (activeZones.has(key)) {
+    activeZones.delete(key);
+    map.removeLayer(layerGroups[key]);
+  } else {
+    activeZones.add(key);
+    layerGroups[key].addTo(map);
+  }
+  renderCats();
+}
+
+function toggleAllZones() {
+  if (activeZones.size === Object.keys(ZONAS).length) {
+    Object.keys(ZONAS).forEach(k => { activeZones.delete(k); map.removeLayer(layerGroups[k]); });
+  } else {
+    Object.keys(ZONAS).forEach(k => { activeZones.add(k); layerGroups[k].addTo(map); });
+  }
+  renderCats();
+}
+
+function togglePanel(id) {
+  const p = document.getElementById(id);
+  p.classList.toggle('collapsed');
+  const icon = document.getElementById('cats-icon');
+  if (icon) icon.className = p.classList.contains('collapsed') ? 'fas fa-chevron-up' : 'fas fa-chevron-down';
+}
+
+renderCats();
+
+// ══════════════════════════════════════════════
+// TOTAL BADGE
+// ══════════════════════════════════════════════
+const totalVotantes = CENTROS.reduce((s,c) => s+c.votantes, 0);
+document.getElementById('total-badge').innerHTML =
+  `<b>${CENTROS.length}</b> centros · <b>${totalVotantes.toLocaleString()}</b> votantes`;
+
+// ══════════════════════════════════════════════
+// CAPAS / SATELITAL
+// ══════════════════════════════════════════════
+let currentLayer = 'standard';
+function setLayer(type) {
+  if (type === currentLayer) return;
+  currentLayer = type;
+  if (type === 'standard') {
+    map.removeLayer(tileSatellite);
+    tileStandard.addTo(map);
+    document.getElementById('btn-standard').classList.add('active');
+    document.getElementById('btn-satellite').classList.remove('active');
+  } else {
+    map.removeLayer(tileStandard);
+    tileSatellite.addTo(map);
+    document.getElementById('btn-satellite').classList.add('active');
+    document.getElementById('btn-standard').classList.remove('active');
+  }
+}
+
+// ══════════════════════════════════════════════
+// GEOLOCALIZACIÓN
+// ══════════════════════════════════════════════
+function geolocate() {
+  if (!navigator.geolocation) { showToast('GPS no disponible'); return; }
+  navigator.geolocation.getCurrentPosition(pos => {
+    map.setView([pos.coords.latitude, pos.coords.longitude], 16);
+    L.marker([pos.coords.latitude, pos.coords.longitude], {
+      icon: L.divIcon({
+        className:'',
+        html:`<div style="width:20px;height:20px;border-radius:50%;background:#00c853;border:3px solid #fff;box-shadow:0 0 12px rgba(0,200,83,0.6);animation:blink 1s infinite"></div>`,
+        iconSize:[20,20], iconAnchor:[10,10]
+      })
+    }).addTo(map).bindPopup('<div style="color:#fff;background:#0a0f1e;padding:8px;border-radius:8px;font-size:0.78rem">📍 Tu ubicación actual</div>').openPopup();
+    showToast('✅ Ubicación encontrada');
+  }, () => showToast('❌ Error al obtener ubicación'));
+}
+
+// ══════════════════════════════════════════════
+// HEADER TOGGLE
+// ══════════════════════════════════════════════
+let headerVisible = true;
+function toggleHeader() {
+  headerVisible = !headerVisible;
+  const h = document.getElementById('header');
+  const btn = document.getElementById('toggle-header');
+  const icon = document.getElementById('toggle-icon');
+  h.classList.toggle('collapsed', !headerVisible);
+  icon.className = headerVisible ? 'fas fa-chevron-up' : 'fas fa-chevron-down';
+  btn.style.top = headerVisible ? '0' : '0';
+}
+
+// Auto-collapse en móvil
+if (window.innerWidth < 768) {
+  setTimeout(() => toggleHeader(), 1500);
+}
+
+// ══════════════════════════════════════════════
+// PANEL MONITOREO
+// ══════════════════════════════════════════════
+let monitorOpen = false;
+function toggleMonitor() {
+  monitorOpen = !monitorOpen;
+  document.getElementById('panel-monitor').classList.toggle('open', monitorOpen);
+}
+
+function renderMonitor(filter = '') {
+  const list = document.getElementById('monitor-list');
+  const filtered = CENTROS.filter(c =>
+    c.nombre.toLowerCase().includes(filter.toLowerCase()) ||
+    c.zona.toLowerCase().includes(filter.toLowerCase())
+  );
+  list.innerHTML = filtered.map(c => {
+    const zona = ZONAS[c.zona];
+    const statusClass = { activo:'s-activo', pendiente:'s-pendiente', incidencia:'s-incidencia' }[c.estado];
+    const statusLabel = { activo:'Activo', pendiente:'Pendiente', incidencia:'Incidencia' }[c.estado];
+    return `<div class="monitor-item" id="mi-${c.id}" onclick="flyTo(${c.id})">
+      <div class="monitor-dot" style="background:${zona.color}"></div>
+      <div style="flex:1">
+        <div class="monitor-name">${c.id}. ${c.nombre}</div>
+        <div class="monitor-meta">${c.mesas} mesas · ${c.votantes.toLocaleString()} votantes</div>
+        <span class="status-badge ${statusClass}">${statusLabel}</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function filterMonitor(val) { renderMonitor(val); }
+
+function flyTo(id) {
+  const c = CENTROS.find(x => x.id === id);
+  if (!c) return;
+  map.flyTo([c.lat, c.lng], 17, { animate:true, duration:1.2 });
+  setTimeout(() => markers[id]?.openPopup(), 1300);
+  highlightMonitorItem(id);
+}
+
+function highlightMonitorItem(id) {
+  document.querySelectorAll('.monitor-item').forEach(el => el.style.background = '');
+  const el = document.getElementById(`mi-${id}`);
+  if (el) {
+    el.style.background = 'rgba(0,48,135,0.5)';
+    el.scrollIntoView({ behavior:'smooth', block:'nearest' });
+  }
+}
+
+renderMonitor();
+
+// ══════════════════════════════════════════════
+// COPIAR COORDENADAS
+// ══════════════════════════════════════════════
+function copyCoords(lat, lng) {
+  navigator.clipboard.writeText(`${lat}, ${lng}`).then(() => {
+    showToast('📋 Coordenadas copiadas');
+  }).catch(() => {
+    showToast('No se pudo copiar');
+  });
+}
+
+// ══════════════════════════════════════════════
+// TOAST
+// ══════════════════════════════════════════════
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// ══════════════════════════════════════════════
+// DESCARGA CON MARCA DE AGUA
+// ══════════════════════════════════════════════
+function downloadMap() {
+  showToast('⏳ Generando imagen del mapa...');
+  const mapEl = document.getElementById('map');
+
+  html2canvas(mapEl, {
+    useCORS: true, allowTaint: true, scale: 1.5,
+    ignoreElements: el => el.id === 'panel-monitor'
+  }).then(canvas => {
+    const ctx = canvas.getContext('2d');
+    const w = canvas.width, h = canvas.height;
+
+    // Marca de agua degradado inferior
+    const grad = ctx.createLinearGradient(0, h*0.75, 0, h);
+    grad.addColorStop(0, 'rgba(0,26,77,0)');
+    grad.addColorStop(1, 'rgba(0,26,77,0.85)');
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, h*0.75, w, h*0.25);
+
+    // Texto marca de agua
+    ctx.fillStyle = 'rgba(255,215,0,0.9)';
+    ctx.font = `bold ${Math.floor(w*0.025)}px Oswald, sans-serif`;
+    ctx.textAlign = 'right';
+    ctx.fillText('⚡ ORDEN Y GESTIÓN · BALDWYN MUJICA', w-20, h-40);
+    ctx.fillStyle = 'rgba(255,255,255,0.6)';
+    ctx.font = `${Math.floor(w*0.016)}px Rajdhani, sans-serif`;
+    ctx.fillText(`Municipio Los Guayos · Carabobo · ${new Date().toLocaleDateString('es-VE')}`, w-20, h-18);
+
+    // Logo texto marca
+    ctx.textAlign = 'left';
+    ctx.fillStyle = 'rgba(255,215,0,0.8)';
+    ctx.font = `bold ${Math.floor(w*0.018)}px Oswald, sans-serif`;
+    ctx.fillText('MAPA ESTRATÉGICO ELECTORAL', 20, h-20);
+
+    const link = document.createElement('a');
+    link.download = `mapa-electoral-guayos-${Date.now()}.png`;
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+    showToast('✅ Mapa descargado correctamente');
+  }).catch(() => showToast('❌ Error al generar imagen'));
+}
+
+// ══════════════════════════════════════════════
+// LOADING HIDE
+// ══════════════════════════════════════════════
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    document.getElementById('loading').classList.add('fade');
+    setTimeout(() => document.getElementById('loading').remove(), 800);
+  }, 1800);
+});
+</script>
+</body>
+</html>
