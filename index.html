@@ -1,1790 +1,1779 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Concertación Los Guayos — Portal Estratégico Municipal</title>
-    <meta name="description" content="Portal estratégico municipal de Concertación Los Guayos — Organización política, estructura territorial, activismo y coordinación electoral.">
-    <style>
-        :root {
-            --azul: #1a3c5e;
-            --azul-claro: #2b5f8e;
-            --azul-suave: #e8f0f8;
-            --verde: #1b7a3d;
-            --verde-claro: #28a34a;
-            --verde-suave: #e6f4ea;
-            --blanco: #ffffff;
-            --gris-fondo: #f4f6f9;
-            --gris-card: #fafbfc;
-            --gris-borde: #e2e8f0;
-            --gris-texto: #4a5568;
-            --gris-oscuro: #2d3748;
-            --sombra-sm: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
-            --sombra-md: 0 4px 16px rgba(0, 0, 0, 0.08), 0 2px 6px rgba(0, 0, 0, 0.04);
-            --sombra-lg: 0 12px 32px rgba(0, 0, 0, 0.10), 0 4px 12px rgba(0, 0, 0, 0.05);
-            --sombra-xl: 0 20px 48px rgba(0, 0, 0, 0.12), 0 8px 20px rgba(0, 0, 0, 0.06);
-            --glass-bg: rgba(255, 255, 255, 0.72);
-            --glass-border: rgba(255, 255, 255, 0.55);
-            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.07);
-            --radio: 14px;
-            --radio-lg: 20px;
-            --radio-xl: 24px;
-            --transicion: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-            --fuente-titulos: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            --fuente-cuerpo: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
-            --header-h: 64px;
-            --sidebar-w: 280px;
-        }
-
-        *,
-        *::before,
-        *::after {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        html {
-            scroll-behavior: smooth;
-            font-size: 15px;
-        }
-        body {
-            font-family: var(--fuente-cuerpo);
-            background: var(--gris-fondo);
-            color: var(--gris-oscuro);
-            line-height: 1.6;
-            min-height: 100vh;
-            overflow-x: hidden;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-        }
-
-        /* Fondo con patrón sutil */
-        body::before {
-            content: '';
-            position: fixed;
-            inset: 0;
-            z-index: -2;
-            background:
-                radial-gradient(ellipse at 15% 20%, rgba(26, 60, 94, 0.04) 0%, transparent 60%),
-                radial-gradient(ellipse at 80% 70%, rgba(27, 122, 61, 0.04) 0%, transparent 60%),
-                radial-gradient(ellipse at 50% 50%, rgba(200, 210, 225, 0.06) 0%, transparent 80%),
-                linear-gradient(180deg, #f8fafb 0%, #f4f6f9 30%, #eef1f5 100%);
-        }
-        body::after {
-            content: '';
-            position: fixed;
-            inset: 0;
-            z-index: -1;
-            opacity: 0.3;
-            pointer-events: none;
-            background-image:
-                radial-gradient(circle at 25% 15%, rgba(26, 60, 94, 0.03) 1px, transparent 1px),
-                radial-gradient(circle at 70% 60%, rgba(27, 122, 61, 0.03) 1px, transparent 1px);
-            background-size: 50px 50px, 70px 70px;
-            background-position: 0 0, 25px 25px;
-        }
-
-        /* ===== HEADER ===== */
-        .header {
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            background: var(--glass-bg);
-            backdrop-filter: blur(18px) saturate(140%);
-            -webkit-backdrop-filter: blur(18px) saturate(140%);
-            border-bottom: 1px solid var(--glass-border);
-            box-shadow: var(--sombra-sm);
-            height: var(--header-h);
-            display: flex;
-            align-items: center;
-            padding: 0 20px;
-            gap: 16px;
-            transition: all var(--transicion);
-        }
-        .header.scrolled {
-            box-shadow: var(--sombra-md);
-            background: rgba(255, 255, 255, 0.9);
-        }
-        .header-logo {
-            height: 42px;
-            width: auto;
-            flex-shrink: 0;
-            border-radius: 8px;
-            transition: transform var(--transicion);
-        }
-        .header-logo:hover {
-            transform: scale(1.04);
-        }
-        .header-banner {
-            flex: 1;
-            height: 50px;
-            border-radius: 10px;
-            object-fit: cover;
-            object-position: center 20%;
-            min-width: 0;
-            box-shadow: var(--sombra-sm);
-            transition: all var(--transicion);
-            cursor: pointer;
-        }
-        .header-banner:hover {
-            box-shadow: var(--sombra-md);
-        }
-        .header-nav {
-            display: flex;
-            gap: 6px;
-            flex-shrink: 0;
-            align-items: center;
-        }
-        .header-nav a,
-        .header-nav button {
-            font-family: var(--fuente-cuerpo);
-            font-size: 0.9rem;
-            font-weight: 500;
-            color: var(--gris-oscuro);
-            text-decoration: none;
-            padding: 8px 16px;
-            border-radius: 24px;
-            transition: all var(--transicion);
-            background: transparent;
-            border: none;
-            cursor: pointer;
-            white-space: nowrap;
-            letter-spacing: 0.01em;
-        }
-        .header-nav a:hover,
-        .header-nav button:hover {
-            background: var(--azul-suave);
-            color: var(--azul);
-        }
-        .btn-nosotros {
-            background: var(--azul) !important;
-            color: #fff !important;
-            font-weight: 600 !important;
-            border-radius: 24px !important;
-            padding: 9px 20px !important;
-            letter-spacing: 0.02em !important;
-            box-shadow: 0 2px 8px rgba(26, 60, 94, 0.25);
-        }
-        .btn-nosotros:hover {
-            background: var(--azul-claro) !important;
-            color: #fff !important;
-            box-shadow: 0 4px 16px rgba(26, 60, 94, 0.35) !important;
-            transform: translateY(-1px);
-        }
-        .menu-toggle {
-            display: none;
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 8px;
-            border-radius: 8px;
-            color: var(--gris-oscuro);
-            font-size: 1.5rem;
-            transition: all var(--transicion);
-        }
-        .menu-toggle:hover {
-            background: var(--azul-suave);
-            color: var(--azul);
-        }
-
-        /* ===== LAYOUT ===== */
-        .app-layout {
-            display: flex;
-            min-height: calc(100vh - var(--header-h));
-            position: relative;
-        }
-
-        /* ===== SIDEBAR ===== */
-        .sidebar {
-            width: var(--sidebar-w);
-            flex-shrink: 0;
-            background: var(--glass-bg);
-            backdrop-filter: blur(12px) saturate(130%);
-            -webkit-backdrop-filter: blur(12px) saturate(130%);
-            border-right: 1px solid var(--glass-border);
-            padding: 20px 16px;
-            overflow-y: auto;
-            position: sticky;
-            top: var(--header-h);
-            height: calc(100vh - var(--header-h));
-            z-index: 50;
-            transition: transform var(--transicion), opacity var(--transicion);
-            box-shadow: var(--sombra-sm);
-        }
-        .sidebar-header {
-            text-align: center;
-            margin-bottom: 18px;
-            padding-bottom: 14px;
-            border-bottom: 2px solid var(--gris-borde);
-        }
-        .sidebar-header h3 {
-            font-family: var(--fuente-titulos);
-            font-size: 1rem;
-            font-weight: 700;
-            color: var(--azul);
-            letter-spacing: 0.02em;
-            margin: 0;
-        }
-        .sidebar-header .subtitle {
-            font-size: 0.78rem;
-            color: var(--gris-texto);
-            margin-top: 2px;
-        }
-        .sidebar-escudos {
-            display: flex;
-            justify-content: center;
-            gap: 16px;
-            margin-bottom: 14px;
-            align-items: center;
-        }
-        .sidebar-escudos img {
-            height: 44px;
-            width: auto;
-            border-radius: 6px;
-            transition: transform var(--transicion);
-        }
-        .sidebar-escudos img:hover {
-            transform: scale(1.08);
-        }
-        .sector-list {
-            list-style: none;
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-        .sector-item {
-            background: var(--blanco);
-            border: 1px solid var(--gris-borde);
-            border-radius: 10px;
-            padding: 10px 14px;
-            cursor: pointer;
-            transition: all var(--transicion);
-            position: relative;
-            box-shadow: var(--sombra-sm);
-        }
-        .sector-item:hover {
-            border-color: var(--azul-claro);
-            box-shadow: var(--sombra-md);
-            transform: translateX(2px);
-            background: #fdfeff;
-        }
-        .sector-item .sector-name {
-            font-weight: 600;
-            font-size: 0.9rem;
-            color: var(--gris-oscuro);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .sector-item .sector-coord {
-            font-size: 0.75rem;
-            color: var(--gris-texto);
-            margin-top: 2px;
-        }
-        .sector-item .sector-actions {
-            display: flex;
-            gap: 6px;
-            margin-top: 4px;
-        }
-        .sector-item .sector-actions button {
-            font-size: 0.7rem;
-            padding: 4px 10px;
-            border-radius: 14px;
-            border: 1px solid var(--gris-borde);
-            background: var(--blanco);
-            cursor: pointer;
-            transition: all var(--transicion);
-            color: var(--gris-texto);
-        }
-        .sector-item .sector-actions button:hover {
-            background: var(--azul-suave);
-            color: var(--azul);
-            border-color: var(--azul-claro);
-        }
-        .sector-item .sector-actions button.del {
-            color: #c53030;
-            border-color: #fed7d7;
-        }
-        .sector-item .sector-actions button.del:hover {
-            background: #fff5f5;
-            border-color: #c53030;
-        }
-        .add-sector-btn {
-            width: 100%;
-            margin-top: 10px;
-            padding: 10px;
-            border-radius: 10px;
-            border: 2px dashed var(--gris-borde);
-            background: transparent;
-            cursor: pointer;
-            font-weight: 600;
-            color: var(--azul-claro);
-            transition: all var(--transicion);
-            font-size: 0.85rem;
-            letter-spacing: 0.02em;
-        }
-        .add-sector-btn:hover {
-            border-color: var(--azul-claro);
-            background: var(--azul-suave);
-            color: var(--azul);
-        }
-
-        /* ===== MAIN CONTENT ===== */
-        .main-content {
-            flex: 1;
-            padding: 24px 20px 40px;
-            overflow-y: auto;
-            min-width: 0;
-        }
-        .section-title {
-            font-family: var(--fuente-titulos);
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--azul);
-            margin-bottom: 6px;
-            letter-spacing: 0.02em;
-        }
-        .section-subtitle {
-            font-size: 0.9rem;
-            color: var(--gris-texto);
-            margin-bottom: 20px;
-        }
-        .card {
-            background: var(--glass-bg);
-            backdrop-filter: blur(10px) saturate(130%);
-            -webkit-backdrop-filter: blur(10px) saturate(130%);
-            border: 1px solid var(--glass-border);
-            border-radius: var(--radio-lg);
-            padding: 20px 22px;
-            box-shadow: var(--glass-shadow);
-            transition: all var(--transicion);
-            margin-bottom: 16px;
-        }
-        .card:hover {
-            box-shadow: var(--sombra-lg);
-            transform: translateY(-1px);
-        }
-        .card-header {
-            font-weight: 700;
-            font-size: 1.05rem;
-            color: var(--azul);
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .map-card {
-            overflow: hidden;
-            padding: 0;
-            border-radius: var(--radio-xl);
-            box-shadow: var(--sombra-lg);
-            border: 2px solid var(--glass-border);
-        }
-        .map-card iframe {
-            width: 100%;
-            height: 420px;
-            border: none;
-            display: block;
-            border-radius: var(--radio-xl);
-        }
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 14px;
-            margin-bottom: 20px;
-        }
-        .stat-card {
-            background: var(--glass-bg);
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--glass-border);
-            border-radius: var(--radio-lg);
-            padding: 18px 16px;
-            text-align: center;
-            box-shadow: var(--glass-shadow);
-            transition: all var(--transicion);
-        }
-        .stat-card:hover {
-            transform: translateY(-3px);
-            box-shadow: var(--sombra-lg);
-        }
-        .stat-value {
-            font-family: var(--fuente-titulos);
-            font-size: 2rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, var(--azul), var(--azul-claro));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        .stat-label {
-            font-size: 0.8rem;
-            color: var(--gris-texto);
-            font-weight: 500;
-            letter-spacing: 0.02em;
-            text-transform: uppercase;
-            margin-top: 2px;
-        }
-
-        /* ===== PANEL NOSOTROS ===== */
-        .overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(15, 20, 30, 0.55);
-            z-index: 200;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity var(--transicion);
-            backdrop-filter: blur(2px);
-        }
-        .overlay.active {
-            opacity: 1;
-            pointer-events: auto;
-        }
-        .panel-nosotros {
-            position: fixed;
-            top: 0;
-            right: 0;
-            width: 520px;
-            max-width: 94vw;
-            height: 100vh;
-            z-index: 210;
-            background: var(--blanco);
-            box-shadow: var(--sombra-xl);
-            transform: translateX(105%);
-            transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-        }
-        .panel-nosotros.active {
-            transform: translateX(0);
-        }
-        .panel-header {
-            padding: 18px 20px;
-            border-bottom: 1px solid var(--gris-borde);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: sticky;
-            top: 0;
-            background: var(--blanco);
-            z-index: 5;
-            box-shadow: var(--sombra-sm);
-        }
-        .panel-header h3 {
-            font-family: var(--fuente-titulos);
-            color: var(--azul);
-            font-size: 1.2rem;
-            font-weight: 700;
-        }
-        .panel-close {
-            background: none;
-            border: none;
-            font-size: 1.6rem;
-            cursor: pointer;
-            color: var(--gris-texto);
-            transition: all var(--transicion);
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .panel-close:hover {
-            background: #fee;
-            color: #c53030;
-        }
-        .panel-body {
-            padding: 16px 20px 30px;
-            flex: 1;
-        }
-        .org-section {
-            margin-bottom: 20px;
-        }
-        .org-title {
-            font-weight: 700;
-            font-size: 1rem;
-            color: var(--azul);
-            padding: 8px 12px;
-            background: var(--azul-suave);
-            border-radius: 8px;
-            margin-bottom: 10px;
-            letter-spacing: 0.02em;
-        }
-        .org-tree {
-            padding-left: 16px;
-            border-left: 2px solid var(--gris-borde);
-            margin-left: 8px;
-        }
-        .org-node {
-            padding: 8px 12px;
-            margin: 4px 0;
-            border-radius: 8px;
-            background: var(--gris-card);
-            border: 1px solid var(--gris-borde);
-            cursor: pointer;
-            transition: all var(--transicion);
-            position: relative;
-            font-size: 0.85rem;
-        }
-        .org-node:hover {
-            border-color: var(--azul-claro);
-            box-shadow: var(--sombra-sm);
-        }
-        .org-node .node-title {
-            font-weight: 600;
-            color: var(--gris-oscuro);
-        }
-        .org-node .node-person {
-            font-size: 0.78rem;
-            color: var(--verde);
-            font-weight: 500;
-        }
-        .org-node .node-actions {
-            display: flex;
-            gap: 4px;
-            margin-top: 4px;
-        }
-        .org-node .node-actions button {
-            font-size: 0.68rem;
-            padding: 3px 8px;
-            border-radius: 10px;
-            border: 1px solid var(--gris-borde);
-            cursor: pointer;
-            background: var(--blanco);
-            transition: all var(--transicion);
-        }
-        .org-node .node-actions button:hover {
-            background: var(--azul-suave);
-            border-color: var(--azul-claro);
-        }
-        .propuestas-list {
-            margin-top: 6px;
-            padding-left: 10px;
-            font-size: 0.78rem;
-            color: var(--gris-texto);
-            list-style: disc;
-        }
-        .propuestas-list li {
-            margin: 2px 0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 8px;
-        }
-        .propuestas-list li button {
-            font-size: 0.65rem;
-            padding: 2px 6px;
-            border-radius: 6px;
-            border: 1px solid #fed7d7;
-            background: #fff5f5;
-            color: #c53030;
-            cursor: pointer;
-            transition: all var(--transicion);
-        }
-        .propuestas-list li button:hover {
-            background: #fee;
-        }
-        .add-propuesta-btn {
-            font-size: 0.7rem;
-            padding: 4px 10px;
-            border-radius: 10px;
-            border: 1px dashed var(--gris-borde);
-            cursor: pointer;
-            background: transparent;
-            color: var(--azul-claro);
-            transition: all var(--transicion);
-            margin-top: 4px;
-        }
-        .add-propuesta-btn:hover {
-            border-color: var(--azul-claro);
-            background: var(--azul-suave);
-        }
-
-        /* ===== CENTROS ELECTORALES ===== */
-        .centros-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 14px;
-        }
-        .centro-card {
-            background: var(--glass-bg);
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--glass-border);
-            border-radius: var(--radio-lg);
-            padding: 16px 18px;
-            cursor: pointer;
-            transition: all var(--transicion);
-            box-shadow: var(--glass-shadow);
-            position: relative;
-            overflow: hidden;
-        }
-        .centro-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 4px;
-            height: 100%;
-            background: linear-gradient(180deg, var(--azul), var(--verde));
-            border-radius: 0 4px 4px 0;
-            opacity: 0;
-            transition: opacity var(--transicion);
-        }
-        .centro-card:hover::before {
-            opacity: 1;
-        }
-        .centro-card:hover {
-            transform: translateY(-3px);
-            box-shadow: var(--sombra-lg);
-            border-color: #c8d6e5;
-        }
-        .centro-card .centro-name {
-            font-weight: 700;
-            font-size: 0.9rem;
-            color: var(--gris-oscuro);
-            margin-bottom: 4px;
-            line-height: 1.3;
-        }
-        .centro-card .centro-meta {
-            display: flex;
-            gap: 12px;
-            font-size: 0.78rem;
-            color: var(--gris-texto);
-            flex-wrap: wrap;
-        }
-        .centro-card .centro-meta span {
-            background: var(--azul-suave);
-            padding: 3px 10px;
-            border-radius: 12px;
-            font-weight: 500;
-            color: var(--azul);
-        }
-        .centro-card .centro-meta span.votantes {
-            background: var(--verde-suave);
-            color: var(--verde);
-        }
-        .centro-detail {
-            display: none;
-            margin-top: 12px;
-            padding-top: 12px;
-            border-top: 1px solid var(--gris-borde);
-            font-size: 0.8rem;
-        }
-        .centro-card.expanded .centro-detail {
-            display: block;
-            animation: fadeIn 0.3s ease;
-        }
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(-8px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        .detail-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 5px 0;
-            border-bottom: 1px dotted var(--gris-borde);
-            flex-wrap: wrap;
-            gap: 4px;
-        }
-        .detail-row strong {
-            color: var(--gris-oscuro);
-            font-size: 0.75rem;
-        }
-        .detail-row span {
-            color: var(--gris-texto);
-            font-size: 0.75rem;
-            text-align: right;
-        }
-        .detail-row input {
-            font-size: 0.73rem;
-            padding: 3px 8px;
-            border-radius: 6px;
-            border: 1px solid var(--gris-borde);
-            width: 130px;
-            transition: all var(--transicion);
-        }
-        .detail-row input:focus {
-            outline: none;
-            border-color: var(--azul-claro);
-            box-shadow: 0 0 0 2px rgba(26, 60, 94, 0.08);
-        }
-        .save-btn-mini {
-            font-size: 0.7rem;
-            padding: 4px 10px;
-            border-radius: 10px;
-            border: none;
-            background: var(--verde);
-            color: #fff;
-            cursor: pointer;
-            transition: all var(--transicion);
-            font-weight: 600;
-        }
-        .save-btn-mini:hover {
-            background: var(--verde-claro);
-        }
-
-        /* ===== MODAL ===== */
-        .modal-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(15, 20, 30, 0.5);
-            z-index: 300;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity var(--transicion);
-        }
-        .modal-overlay.active {
-            opacity: 1;
-            pointer-events: auto;
-        }
-        .modal {
-            background: var(--blanco);
-            border-radius: var(--radio-xl);
-            padding: 24px;
-            width: 420px;
-            max-width: 92vw;
-            box-shadow: var(--sombra-xl);
-            transform: translateY(20px);
-            transition: transform var(--transicion);
-        }
-        .modal-overlay.active .modal {
-            transform: translateY(0);
-        }
-        .modal h4 {
-            font-family: var(--fuente-titulos);
-            color: var(--azul);
-            margin-bottom: 14px;
-            font-size: 1.05rem;
-        }
-        .modal input {
-            width: 100%;
-            padding: 10px 14px;
-            border-radius: 10px;
-            border: 1px solid var(--gris-borde);
-            margin-bottom: 8px;
-            font-size: 0.9rem;
-            transition: all var(--transicion);
-            font-family: var(--fuente-cuerpo);
-        }
-        .modal input:focus {
-            outline: none;
-            border-color: var(--azul-claro);
-            box-shadow: 0 0 0 3px rgba(26, 60, 94, 0.06);
-        }
-        .modal-buttons {
-            display: flex;
-            gap: 8px;
-            justify-content: flex-end;
-            margin-top: 12px;
-        }
-        .modal-buttons button {
-            padding: 9px 18px;
-            border-radius: 20px;
-            border: none;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 0.85rem;
-            transition: all var(--transicion);
-        }
-        .btn-primary {
-            background: var(--azul);
-            color: #fff;
-        }
-        .btn-primary:hover {
-            background: var(--azul-claro);
-            box-shadow: 0 4px 12px rgba(26, 60, 94, 0.3);
-        }
-        .btn-secondary {
-            background: var(--gris-borde);
-            color: var(--gris-oscuro);
-        }
-        .btn-secondary:hover {
-            background: #d1d5db;
-        }
-
-        /* ===== FOOTER ===== */
-        .footer {
-            background: var(--glass-bg);
-            backdrop-filter: blur(12px);
-            border-top: 1px solid var(--glass-border);
-            padding: 28px 20px 20px;
-            text-align: center;
-            box-shadow: var(--sombra-sm);
-        }
-        .footer-social {
-            display: flex;
-            justify-content: center;
-            gap: 14px;
-            flex-wrap: wrap;
-            margin-bottom: 16px;
-        }
-        .footer-social a {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 8px 14px;
-            border-radius: 20px;
-            background: var(--blanco);
-            border: 1px solid var(--gris-borde);
-            text-decoration: none;
-            color: var(--gris-oscuro);
-            font-size: 0.8rem;
-            font-weight: 500;
-            transition: all var(--transicion);
-            box-shadow: var(--sombra-sm);
-        }
-        .footer-social a:hover {
-            border-color: var(--azul-claro);
-            box-shadow: var(--sombra-md);
-            transform: translateY(-2px);
-            color: var(--azul);
-        }
-        .footer-social a img {
-            width: 20px;
-            height: 20px;
-            border-radius: 4px;
-            flex-shrink: 0;
-        }
-        .footer-text {
-            font-size: 0.78rem;
-            color: var(--gris-texto);
-            line-height: 1.6;
-        }
-        .footer-text strong {
-            color: var(--azul);
-        }
-        .footer-links {
-            display: flex;
-            gap: 14px;
-            flex-wrap: wrap;
-            justify-content: center;
-            margin-top: 10px;
-        }
-        .footer-links a {
-            color: var(--azul-claro);
-            text-decoration: none;
-            font-weight: 500;
-            font-size: 0.82rem;
-            transition: all var(--transicion);
-        }
-        .footer-links a:hover {
-            color: var(--azul);
-            text-decoration: underline;
-        }
-
-        /* ===== RESPONSIVE ===== */
-        @media (max-width: 1024px) {
-            .sidebar {
-                position: fixed;
-                left: 0;
-                top: var(--header-h);
-                height: calc(100vh - var(--header-h));
-                transform: translateX(-105%);
-                z-index: 90;
-                width: 280px;
-                box-shadow: var(--sombra-xl);
-                transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            }
-            .sidebar.open {
-                transform: translateX(0);
-            }
-            .menu-toggle {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-            }
-            .header-nav a:not(.btn-nosotros) {
-                display: none;
-            }
-            .header-banner {
-                height: 40px;
-            }
-            .panel-nosotros {
-                width: 100%;
-                max-width: 100%;
-            }
-            .centros-grid {
-                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            }
-            .stats-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-        @media (max-width: 640px) {
-            .header {
-                padding: 0 10px;
-                gap: 8px;
-            }
-            .header-logo {
-                height: 32px;
-            }
-            .header-banner {
-                height: 34px;
-                border-radius: 6px;
-            }
-            .btn-nosotros {
-                padding: 7px 14px !important;
-                font-size: 0.8rem !important;
-            }
-            .main-content {
-                padding: 14px 10px 24px;
-            }
-            .section-title {
-                font-size: 1.2rem;
-            }
-            .map-card iframe {
-                height: 280px;
-            }
-            .centros-grid {
-                grid-template-columns: 1fr;
-            }
-            .stats-grid {
-                grid-template-columns: 1fr 1fr;
-                gap: 8px;
-            }
-            .stat-value {
-                font-size: 1.4rem;
-            }
-            .stat-label {
-                font-size: 0.7rem;
-            }
-            .footer-social a {
-                padding: 6px 10px;
-                font-size: 0.7rem;
-            }
-            .panel-nosotros {
-                width: 100%;
-                max-width: 100%;
-            }
-            .modal {
-                width: 95vw;
-                padding: 16px;
-            }
-        }
-        @media (max-width: 380px) {
-            .header-logo {
-                height: 26px;
-            }
-            .header-banner {
-                height: 28px;
-            }
-            .btn-nosotros {
-                padding: 5px 10px !important;
-                font-size: 0.7rem !important;
-            }
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        /* ===== UTILIDADES ===== */
-        .scrollbar-thin::-webkit-scrollbar {
-            width: 5px;
-        }
-        .scrollbar-thin::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        .scrollbar-thin::-webkit-scrollbar-thumb {
-            background: #d1d5db;
-            border-radius: 10px;
-        }
-        .sidebar,
-        .panel-nosotros,
-        .main-content {
-            scrollbar-width: thin;
-            scrollbar-color: #d1d5db transparent;
-        }
-        .badge {
-            display: inline-block;
-            padding: 3px 10px;
-            border-radius: 12px;
-            font-size: 0.7rem;
-            font-weight: 600;
-            letter-spacing: 0.02em;
-        }
-        .badge-azul {
-            background: var(--azul-suave);
-            color: var(--azul);
-        }
-        .badge-verde {
-            background: var(--verde-suave);
-            color: var(--verde);
-        }
-        .toast {
-            position: fixed;
-            bottom: 24px;
-            right: 24px;
-            background: var(--azul);
-            color: #fff;
-            padding: 12px 20px;
-            border-radius: 24px;
-            font-weight: 600;
-            font-size: 0.85rem;
-            z-index: 500;
-            box-shadow: var(--sombra-lg);
-            animation: slideUp 0.35s ease, fadeOut 0.35s ease 2s forwards;
-        }
-        @keyframes slideUp {
-            from {
-                transform: translateY(40px);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-        @keyframes fadeOut {
-            to {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-        }
-    </style>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Concertación Los Guayos — Portal Estratégico Municipal</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet"/>
+<style>
+/* ============================================================
+   VARIABLES Y RESET
+   ============================================================ */
+:root {
+  --azul: #1A3A8F;
+  --azul-med: #2451B7;
+  --azul-light: #3B6DD4;
+  --azul-pale: #EAF0FB;
+  --verde: #1A8C4E;
+  --verde-light: #25B868;
+  --verde-pale: #E6F7EF;
+  --blanco: #FFFFFF;
+  --gris-10: #F4F6FA;
+  --gris-20: #E8ECF3;
+  --gris-40: #C4CEDF;
+  --gris-60: #8898B3;
+  --gris-80: #3D4F6B;
+  --negro: #0D1B2E;
+  --sombra-sm: 0 2px 8px rgba(26,58,143,.10);
+  --sombra: 0 4px 24px rgba(26,58,143,.13);
+  --sombra-lg: 0 8px 48px rgba(26,58,143,.18);
+  --radio: 14px;
+  --radio-sm: 8px;
+  --sidebar-w: 280px;
+  --header-h: 70px;
+  --trans: .25s cubic-bezier(.4,0,.2,1);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:'DM Sans',sans-serif;
+  background:var(--gris-10);
+  color:var(--negro);
+  min-height:100vh;
+  overflow-x:hidden;
+}
+a{color:inherit;text-decoration:none;}
+button{cursor:pointer;font-family:inherit;}
+img{max-width:100%;display:block;}
+ 
+/* ============================================================
+   SCROLLBAR PERSONALIZADO
+   ============================================================ */
+::-webkit-scrollbar{width:6px;}
+::-webkit-scrollbar-track{background:var(--gris-10);}
+::-webkit-scrollbar-thumb{background:var(--azul-light);border-radius:3px;}
+ 
+/* ============================================================
+   HEADER
+   ============================================================ */
+#header{
+  position:fixed;top:0;left:0;right:0;
+  height:var(--header-h);
+  background:rgba(255,255,255,.92);
+  backdrop-filter:blur(18px);
+  border-bottom:1px solid var(--gris-20);
+  display:flex;align-items:center;
+  padding:0 24px;
+  gap:16px;
+  z-index:1000;
+  box-shadow:var(--sombra-sm);
+}
+#header .logo-wrap{
+  display:flex;align-items:center;gap:10px;
+  flex-shrink:0;
+}
+#header .logo-wrap img{
+  height:44px;width:44px;
+  border-radius:8px;
+  object-fit:cover;
+}
+#header .logo-text{
+  font-family:'Syne',sans-serif;
+  font-weight:800;font-size:.85rem;
+  line-height:1.15;
+  color:var(--azul);
+}
+#header .logo-text span{color:var(--verde);}
+ 
+#header-banner{
+  flex:1;
+  height:54px;
+  border-radius:10px;
+  overflow:hidden;
+  position:relative;
+}
+#header-banner img{
+  width:100%;height:100%;
+  object-fit:cover;object-position:center top;
+}
+#header-banner::after{
+  content:'';
+  position:absolute;inset:0;
+  background:linear-gradient(90deg,rgba(26,58,143,.55) 0%,transparent 40%,rgba(26,140,78,.3) 100%);
+}
+#header-banner .banner-txt{
+  position:absolute;left:16px;top:50%;transform:translateY(-50%);
+  font-family:'Syne',sans-serif;font-weight:700;
+  color:#fff;font-size:.8rem;letter-spacing:.05em;z-index:1;
+  text-shadow:0 1px 4px rgba(0,0,0,.4);
+}
+ 
+#header nav{
+  display:flex;align-items:center;gap:4px;flex-shrink:0;
+}
+.nav-btn{
+  background:none;border:none;
+  padding:7px 14px;
+  border-radius:8px;
+  font-size:.78rem;font-weight:500;
+  color:var(--gris-80);
+  transition:var(--trans);
+  white-space:nowrap;
+}
+.nav-btn:hover,.nav-btn.active{
+  background:var(--azul-pale);color:var(--azul);
+}
+.nav-btn.cta{
+  background:var(--azul);color:#fff;margin-left:4px;
+}
+.nav-btn.cta:hover{background:var(--azul-med);}
+ 
+/* Botón menú móvil */
+#menu-toggle{
+  display:none;background:none;border:none;
+  flex-direction:column;gap:5px;padding:6px;
+}
+#menu-toggle span{
+  display:block;width:22px;height:2px;
+  background:var(--azul);border-radius:2px;
+  transition:var(--trans);
+}
+ 
+/* ============================================================
+   LAYOUT PRINCIPAL
+   ============================================================ */
+#layout{
+  display:flex;
+  padding-top:var(--header-h);
+  min-height:100vh;
+}
+ 
+/* ============================================================
+   SIDEBAR
+   ============================================================ */
+#sidebar{
+  width:var(--sidebar-w);
+  flex-shrink:0;
+  background:#fff;
+  border-right:1px solid var(--gris-20);
+  position:sticky;
+  top:var(--header-h);
+  height:calc(100vh - var(--header-h));
+  overflow-y:auto;
+  padding:20px 14px;
+  box-shadow:2px 0 12px rgba(26,58,143,.05);
+  transition:transform var(--trans);
+}
+.sb-section{margin-bottom:22px;}
+.sb-title{
+  font-family:'Syne',sans-serif;
+  font-size:.65rem;font-weight:700;
+  letter-spacing:.12em;text-transform:uppercase;
+  color:var(--gris-60);margin-bottom:10px;padding:0 4px;
+}
+.sb-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:6px 12px;border-radius:8px;
+  background:var(--azul-pale);
+  color:var(--azul);
+  font-size:.78rem;font-weight:500;
+  width:100%;margin-bottom:6px;
+}
+.sb-badge .dot{
+  width:7px;height:7px;border-radius:50%;
+  background:var(--azul);flex-shrink:0;
+}
+.sb-badge.verde{background:var(--verde-pale);color:var(--verde);}
+.sb-badge.verde .dot{background:var(--verde);}
+ 
+/* Sectores */
+.sector-card{
+  background:var(--gris-10);
+  border:1px solid var(--gris-20);
+  border-radius:var(--radio-sm);
+  margin-bottom:6px;
+  overflow:hidden;
+  transition:var(--trans);
+}
+.sector-card:hover{border-color:var(--azul-light);box-shadow:var(--sombra-sm);}
+.sector-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:9px 12px;cursor:pointer;
+}
+.sector-name{
+  font-size:.78rem;font-weight:600;color:var(--gris-80);
+}
+.sector-coord{font-size:.7rem;color:var(--gris-60);}
+.sector-toggle{
+  font-size:.7rem;color:var(--gris-60);
+  transition:transform var(--trans);
+}
+.sector-card.open .sector-toggle{transform:rotate(180deg);}
+.sector-body{
+  display:none;padding:8px 12px 12px;
+  border-top:1px solid var(--gris-20);
+}
+.sector-card.open .sector-body{display:block;}
+.sector-info{font-size:.72rem;color:var(--gris-60);margin-bottom:6px;}
+.sector-info span{color:var(--negro);font-weight:500;}
+.sb-add-btn{
+  width:100%;margin-top:10px;
+  background:var(--azul-pale);color:var(--azul);
+  border:1.5px dashed var(--azul-light);
+  border-radius:var(--radio-sm);
+  padding:8px;font-size:.75rem;font-weight:600;
+  transition:var(--trans);
+}
+.sb-add-btn:hover{background:var(--azul);color:#fff;border-style:solid;}
+ 
+/* ============================================================
+   CONTENIDO PRINCIPAL
+   ============================================================ */
+#main{
+  flex:1;
+  padding:28px 28px 40px;
+  min-width:0;
+}
+ 
+/* Sección genérica */
+.section{display:none;}
+.section.active{display:block;}
+ 
+/* ============================================================
+   TARJETAS
+   ============================================================ */
+.card{
+  background:#fff;
+  border-radius:var(--radio);
+  border:1px solid var(--gris-20);
+  box-shadow:var(--sombra-sm);
+  overflow:hidden;
+}
+.card-header{
+  padding:18px 22px 14px;
+  border-bottom:1px solid var(--gris-20);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.card-title{
+  font-family:'Syne',sans-serif;
+  font-size:1rem;font-weight:700;
+  color:var(--azul);
+}
+.card-body{padding:22px;}
+ 
+/* ============================================================
+   HERO / INICIO
+   ============================================================ */
+.hero-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:18px;margin-bottom:24px;
+}
+.stat-card{
+  background:#fff;
+  border-radius:var(--radio);
+  border:1px solid var(--gris-20);
+  padding:20px 22px;
+  box-shadow:var(--sombra-sm);
+  position:relative;overflow:hidden;
+  transition:transform var(--trans),box-shadow var(--trans);
+}
+.stat-card:hover{transform:translateY(-2px);box-shadow:var(--sombra);}
+.stat-card::before{
+  content:'';position:absolute;top:0;left:0;
+  width:4px;height:100%;
+  background:var(--azul);
+}
+.stat-card.verde::before{background:var(--verde);}
+.stat-card.accent::before{background:#E8820C;}
+.stat-num{
+  font-family:'Syne',sans-serif;
+  font-size:2rem;font-weight:800;
+  color:var(--azul);line-height:1;
+  margin-bottom:4px;
+}
+.stat-card.verde .stat-num{color:var(--verde);}
+.stat-card.accent .stat-num{color:#E8820C;}
+.stat-label{font-size:.75rem;color:var(--gris-60);font-weight:500;}
+ 
+/* Mapa */
+.map-wrap{
+  background:#fff;
+  border-radius:var(--radio);
+  border:1px solid var(--gris-20);
+  box-shadow:var(--sombra);
+  overflow:hidden;
+  margin-bottom:24px;
+}
+.map-header{
+  padding:16px 22px;
+  background:linear-gradient(135deg,var(--azul) 0%,var(--azul-med) 100%);
+  display:flex;align-items:center;gap:10px;
+}
+.map-header h2{
+  font-family:'Syne',sans-serif;
+  font-size:.95rem;font-weight:700;color:#fff;
+}
+.map-dot{
+  width:10px;height:10px;border-radius:50%;
+  background:var(--verde-light);
+  box-shadow:0 0 0 3px rgba(37,184,104,.3);
+  animation:pulse 2s infinite;
+}
+@keyframes pulse{
+  0%,100%{box-shadow:0 0 0 3px rgba(37,184,104,.3);}
+  50%{box-shadow:0 0 0 6px rgba(37,184,104,.1);}
+}
+.map-wrap iframe{
+  width:100%;height:480px;border:none;display:block;
+}
+ 
+/* ============================================================
+   SECCIÓN NOSOTROS — ORGANIGRAMA
+   ============================================================ */
+.org-wrap{max-width:900px;margin:0 auto;}
+.org-level{margin-bottom:30px;}
+.org-title{
+  font-family:'Syne',sans-serif;
+  font-size:.65rem;font-weight:700;
+  letter-spacing:.14em;text-transform:uppercase;
+  color:var(--gris-60);margin-bottom:14px;
+  display:flex;align-items:center;gap:8px;
+}
+.org-title::after{content:'';flex:1;height:1px;background:var(--gris-20);}
+ 
+.org-top{
+  display:flex;gap:16px;justify-content:center;
+  flex-wrap:wrap;margin-bottom:20px;
+}
+.org-node{
+  background:#fff;
+  border:2px solid var(--azul-pale);
+  border-radius:var(--radio);
+  padding:16px 20px;
+  text-align:center;
+  min-width:200px;
+  box-shadow:var(--sombra-sm);
+  position:relative;
+  transition:var(--trans);
+}
+.org-node:hover{border-color:var(--azul-light);box-shadow:var(--sombra);}
+.org-node.top-node{
+  border-color:var(--azul);
+  background:linear-gradient(135deg,var(--azul-pale) 0%,#fff 100%);
+}
+.org-node .cargo{
+  font-size:.65rem;font-weight:600;
+  letter-spacing:.1em;text-transform:uppercase;
+  color:var(--gris-60);margin-bottom:5px;
+}
+.org-node .nombre{
+  font-family:'Syne',sans-serif;
+  font-size:.9rem;font-weight:700;
+  color:var(--azul);
+}
+.org-node .nombre.vacio{color:var(--gris-40);font-style:italic;}
+ 
+.org-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
+  gap:12px;
+}
+.org-sec{
+  background:#fff;
+  border:1px solid var(--gris-20);
+  border-radius:var(--radio-sm);
+  overflow:hidden;
+  transition:var(--trans);
+}
+.org-sec:hover{border-color:var(--azul-light);box-shadow:var(--sombra-sm);}
+.org-sec-header{
+  padding:10px 14px;
+  display:flex;align-items:center;justify-content:space-between;
+  cursor:pointer;
+  background:var(--gris-10);
+}
+.org-sec-cargo{font-size:.72rem;font-weight:600;color:var(--gris-80);}
+.org-sec-nombre{font-size:.7rem;color:var(--azul);font-weight:500;}
+.org-sec-body{
+  display:none;padding:10px 14px;
+  border-top:1px solid var(--gris-20);
+}
+.org-sec.open .org-sec-body{display:block;}
+.prop-list{list-style:none;margin-bottom:8px;}
+.prop-list li{
+  font-size:.72rem;color:var(--gris-80);
+  padding:4px 0;border-bottom:1px solid var(--gris-10);
+  display:flex;align-items:center;gap:6px;
+}
+.prop-list li::before{content:'•';color:var(--azul);}
+.add-prop{
+  display:flex;gap:6px;margin-top:6px;
+}
+.add-prop input{
+  flex:1;border:1px solid var(--gris-20);
+  border-radius:6px;padding:5px 8px;
+  font-size:.7rem;outline:none;
+  transition:var(--trans);
+}
+.add-prop input:focus{border-color:var(--azul-light);}
+.add-prop button{
+  background:var(--azul);color:#fff;
+  border:none;border-radius:6px;
+  padding:5px 10px;font-size:.7rem;
+  transition:var(--trans);
+}
+.add-prop button:hover{background:var(--azul-med);}
+ 
+.edit-node-btn{
+  font-size:.65rem;color:var(--gris-60);
+  background:none;border:none;
+  text-decoration:underline;margin-top:4px;
+  transition:var(--trans);
+}
+.edit-node-btn:hover{color:var(--azul);}
+ 
+/* ============================================================
+   SECCIÓN ELECTORAL
+   ============================================================ */
+.electoral-filters{
+  display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap;
+  align-items:center;
+}
+.search-input{
+  flex:1;min-width:200px;
+  border:1px solid var(--gris-20);
+  border-radius:var(--radio-sm);
+  padding:9px 14px;font-size:.82rem;
+  outline:none;background:#fff;
+  transition:var(--trans);
+}
+.search-input:focus{border-color:var(--azul-light);box-shadow:0 0 0 3px rgba(59,109,212,.1);}
+ 
+.total-bar{
+  display:flex;gap:14px;flex-wrap:wrap;margin-bottom:20px;
+}
+.total-pill{
+  display:flex;align-items:center;gap:8px;
+  background:#fff;border:1px solid var(--gris-20);
+  border-radius:20px;padding:7px 16px;
+  font-size:.75rem;font-weight:600;
+  box-shadow:var(--sombra-sm);
+}
+.total-pill .n{
+  font-family:'Syne',sans-serif;font-size:1rem;font-weight:800;
+  color:var(--azul);
+}
+.total-pill.verde .n{color:var(--verde);}
+ 
+.centros-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+  gap:14px;
+}
+.centro-card{
+  background:#fff;
+  border:1px solid var(--gris-20);
+  border-radius:var(--radio);
+  overflow:hidden;
+  box-shadow:var(--sombra-sm);
+  transition:var(--trans);
+}
+.centro-card:hover{border-color:var(--azul-light);box-shadow:var(--sombra);}
+.centro-card-head{
+  padding:14px 18px;
+  background:linear-gradient(135deg,var(--azul-pale) 0%,#fff 100%);
+  border-bottom:1px solid var(--gris-20);
+  cursor:pointer;
+  display:flex;align-items:flex-start;justify-content:space-between;gap:10px;
+}
+.centro-nombre{
+  font-size:.78rem;font-weight:700;
+  color:var(--azul);line-height:1.3;
+  flex:1;
+}
+.centro-meta{
+  display:flex;gap:10px;margin-top:6px;
+}
+.centro-pill{
+  display:inline-flex;align-items:center;gap:4px;
+  background:var(--azul-pale);color:var(--azul);
+  border-radius:6px;padding:2px 8px;font-size:.67rem;font-weight:600;
+}
+.centro-pill.verde{background:var(--verde-pale);color:var(--verde);}
+.centro-toggle-icon{
+  font-size:.75rem;color:var(--gris-60);
+  flex-shrink:0;transition:transform var(--trans);
+}
+.centro-card.open .centro-toggle-icon{transform:rotate(180deg);}
+ 
+.centro-body{
+  display:none;padding:14px 18px;
+}
+.centro-card.open .centro-body{display:block;}
+ 
+.centro-form{display:flex;flex-direction:column;gap:10px;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.form-group{display:flex;flex-direction:column;gap:4px;}
+.form-label{font-size:.67rem;font-weight:600;color:var(--gris-60);text-transform:uppercase;letter-spacing:.08em;}
+.form-input{
+  border:1px solid var(--gris-20);border-radius:6px;
+  padding:7px 10px;font-size:.75rem;font-family:inherit;
+  outline:none;transition:var(--trans);background:var(--gris-10);
+}
+.form-input:focus{border-color:var(--azul-light);background:#fff;}
+ 
+.mesas-section{margin-top:12px;}
+.mesas-title{
+  font-size:.67rem;font-weight:700;
+  color:var(--gris-60);text-transform:uppercase;letter-spacing:.1em;
+  margin-bottom:8px;
+}
+.mesa-item{
+  background:var(--gris-10);border:1px solid var(--gris-20);
+  border-radius:var(--radio-sm);padding:10px 12px;
+  margin-bottom:6px;
+}
+.mesa-num{
+  font-family:'Syne',sans-serif;font-size:.75rem;
+  font-weight:700;color:var(--azul);margin-bottom:6px;
+}
+.save-centro-btn{
+  width:100%;margin-top:10px;
+  background:var(--azul);color:#fff;
+  border:none;border-radius:var(--radio-sm);
+  padding:9px;font-size:.78rem;font-weight:600;
+  transition:var(--trans);
+}
+.save-centro-btn:hover{background:var(--azul-med);}
+.save-centro-btn.saved{background:var(--verde);}
+ 
+/* ============================================================
+   ESTATUTOS
+   ============================================================ */
+.docs-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+  gap:16px;
+}
+.doc-card{
+  background:#fff;border:1px solid var(--gris-20);
+  border-radius:var(--radio);padding:22px;
+  text-align:center;box-shadow:var(--sombra-sm);
+  transition:var(--trans);cursor:pointer;
+}
+.doc-card:hover{border-color:var(--azul-light);box-shadow:var(--sombra);transform:translateY(-2px);}
+.doc-icon{font-size:2.2rem;margin-bottom:10px;}
+.doc-name{font-size:.82rem;font-weight:700;color:var(--azul);margin-bottom:4px;}
+.doc-desc{font-size:.72rem;color:var(--gris-60);}
+ 
+.info-concertacion{
+  background:linear-gradient(135deg,var(--azul) 0%,var(--azul-med) 100%);
+  border-radius:var(--radio);padding:32px;color:#fff;
+  margin-bottom:24px;
+  position:relative;overflow:hidden;
+}
+.info-concertacion::before{
+  content:'';position:absolute;
+  right:-40px;top:-40px;
+  width:200px;height:200px;
+  border-radius:50%;
+  background:rgba(255,255,255,.06);
+}
+.info-concertacion h2{
+  font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;
+  margin-bottom:10px;
+}
+.info-concertacion p{font-size:.85rem;opacity:.85;line-height:1.7;max-width:600px;}
+ 
+/* ============================================================
+   NOTICIAS
+   ============================================================ */
+.news-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+  gap:18px;
+}
+.news-card{
+  background:#fff;border:1px solid var(--gris-20);
+  border-radius:var(--radio);overflow:hidden;
+  box-shadow:var(--sombra-sm);
+  transition:var(--trans);
+}
+.news-card:hover{box-shadow:var(--sombra);transform:translateY(-2px);}
+.news-img{
+  width:100%;height:160px;
+  object-fit:cover;
+  background:var(--azul-pale);
+}
+.news-body{padding:16px;}
+.news-tag{
+  display:inline-block;
+  background:var(--azul-pale);color:var(--azul);
+  border-radius:4px;padding:2px 8px;
+  font-size:.65rem;font-weight:700;
+  letter-spacing:.08em;text-transform:uppercase;
+  margin-bottom:8px;
+}
+.news-tag.verde{background:var(--verde-pale);color:var(--verde);}
+.news-title{
+  font-family:'Syne',sans-serif;
+  font-size:.88rem;font-weight:700;
+  color:var(--negro);margin-bottom:6px;line-height:1.4;
+}
+.news-excerpt{font-size:.75rem;color:var(--gris-60);line-height:1.6;}
+.news-meta{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-top:12px;padding-top:10px;
+  border-top:1px solid var(--gris-10);
+}
+.news-date{font-size:.68rem;color:var(--gris-60);}
+.news-read{font-size:.72rem;color:var(--azul);font-weight:600;}
+ 
+/* ============================================================
+   FOOTER
+   ============================================================ */
+#footer{
+  background:var(--negro);
+  color:#fff;
+  padding:40px 28px 24px;
+  margin-left:var(--sidebar-w);
+}
+.footer-grid{
+  display:grid;
+  grid-template-columns:1.5fr 1fr 1fr 1fr;
+  gap:32px;margin-bottom:32px;
+}
+.footer-brand img{
+  height:40px;margin-bottom:12px;
+  border-radius:6px;
+}
+.footer-brand p{
+  font-size:.78rem;
+  color:rgba(255,255,255,.5);
+  line-height:1.7;
+  margin-bottom:14px;
+}
+.social-row{display:flex;gap:10px;}
+.social-icon{
+  width:36px;height:36px;
+  border-radius:8px;
+  background:rgba(255,255,255,.08);
+  display:flex;align-items:center;justify-content:center;
+  transition:var(--trans);overflow:hidden;
+}
+.social-icon:hover{background:var(--azul-light);}
+.social-icon img{width:18px;height:18px;object-fit:contain;filter:brightness(10);}
+ 
+.footer-col h4{
+  font-family:'Syne',sans-serif;
+  font-size:.72rem;font-weight:700;
+  letter-spacing:.12em;text-transform:uppercase;
+  color:rgba(255,255,255,.4);margin-bottom:14px;
+}
+.footer-col ul{list-style:none;}
+.footer-col ul li{
+  font-size:.78rem;
+  color:rgba(255,255,255,.6);
+  padding:4px 0;
+  transition:var(--trans);cursor:pointer;
+}
+.footer-col ul li:hover{color:#fff;padding-left:4px;}
+ 
+.footer-bottom{
+  border-top:1px solid rgba(255,255,255,.08);
+  padding-top:20px;
+  display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:10px;
+}
+.footer-bottom p{font-size:.72rem;color:rgba(255,255,255,.35);}
+.footer-notice{
+  display:inline-flex;align-items:center;gap:6px;
+  background:rgba(232,130,12,.15);
+  border:1px solid rgba(232,130,12,.3);
+  border-radius:6px;padding:5px 12px;
+  font-size:.7rem;color:#E8820C;
+}
+ 
+/* ============================================================
+   MODAL
+   ============================================================ */
+.modal-overlay{
+  position:fixed;inset:0;
+  background:rgba(13,27,46,.5);
+  backdrop-filter:blur(4px);
+  z-index:2000;
+  display:none;align-items:center;justify-content:center;padding:20px;
+}
+.modal-overlay.open{display:flex;}
+.modal{
+  background:#fff;border-radius:var(--radio);
+  width:100%;max-width:460px;
+  box-shadow:var(--sombra-lg);
+  overflow:hidden;
+}
+.modal-head{
+  padding:18px 22px;
+  background:linear-gradient(135deg,var(--azul) 0%,var(--azul-med) 100%);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.modal-head h3{
+  font-family:'Syne',sans-serif;font-size:.95rem;
+  font-weight:700;color:#fff;
+}
+.modal-close{
+  background:rgba(255,255,255,.2);border:none;
+  color:#fff;border-radius:6px;
+  width:28px;height:28px;font-size:1rem;
+  display:flex;align-items:center;justify-content:center;
+  transition:var(--trans);
+}
+.modal-close:hover{background:rgba(255,255,255,.35);}
+.modal-body{padding:22px;display:flex;flex-direction:column;gap:14px;}
+.modal-field{display:flex;flex-direction:column;gap:5px;}
+.modal-label{font-size:.72rem;font-weight:600;color:var(--gris-60);text-transform:uppercase;letter-spacing:.08em;}
+.modal-input{
+  border:1px solid var(--gris-20);border-radius:8px;
+  padding:9px 12px;font-size:.82rem;font-family:inherit;
+  outline:none;transition:var(--trans);
+}
+.modal-input:focus{border-color:var(--azul-light);box-shadow:0 0 0 3px rgba(59,109,212,.1);}
+.modal-submit{
+  background:var(--azul);color:#fff;border:none;
+  border-radius:8px;padding:11px;font-size:.85rem;font-weight:600;
+  transition:var(--trans);margin-top:4px;
+}
+.modal-submit:hover{background:var(--azul-med);}
+ 
+/* ============================================================
+   TOAST
+   ============================================================ */
+.toast{
+  position:fixed;bottom:24px;right:24px;
+  background:var(--verde);color:#fff;
+  border-radius:var(--radio-sm);
+  padding:12px 20px;font-size:.8rem;font-weight:600;
+  box-shadow:var(--sombra-lg);z-index:3000;
+  transform:translateY(80px);opacity:0;
+  transition:all .35s cubic-bezier(.4,0,.2,1);
+}
+.toast.show{transform:translateY(0);opacity:1;}
+ 
+/* ============================================================
+   PAGE TITLE
+   ============================================================ */
+.page-header{margin-bottom:24px;}
+.page-header h1{
+  font-family:'Syne',sans-serif;
+  font-size:1.5rem;font-weight:800;
+  color:var(--azul);margin-bottom:4px;
+}
+.page-header p{font-size:.82rem;color:var(--gris-60);}
+.breadcrumb{
+  display:flex;align-items:center;gap:6px;
+  font-size:.72rem;color:var(--gris-60);margin-bottom:8px;
+}
+.breadcrumb span{color:var(--azul);font-weight:500;}
+ 
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media(max-width:900px){
+  :root{--sidebar-w:0px;}
+  #sidebar{
+    position:fixed;left:0;top:var(--header-h);
+    width:280px;z-index:900;
+    transform:translateX(-100%);
+  }
+  #sidebar.open{transform:translateX(0);}
+  #menu-toggle{display:flex;}
+  #footer{margin-left:0;}
+  .hero-grid{grid-template-columns:1fr 1fr;}
+  .footer-grid{grid-template-columns:1fr 1fr;}
+}
+@media(max-width:600px){
+  #main{padding:18px 14px 30px;}
+  .hero-grid{grid-template-columns:1fr;}
+  .footer-grid{grid-template-columns:1fr;}
+  .form-row{grid-template-columns:1fr;}
+  #header-banner .banner-txt{display:none;}
+  nav .nav-btn:not(.cta){display:none;}
+}
+ 
+/* Simbolos decorativos */
+.deco-line{
+  height:3px;width:40px;
+  background:linear-gradient(90deg,var(--azul),var(--verde));
+  border-radius:2px;margin-bottom:16px;
+}
+ 
+/* Botón registro destacado */
+.registro-banner{
+  background:linear-gradient(135deg,var(--verde) 0%,var(--verde-light) 100%);
+  border-radius:var(--radio);
+  padding:22px 26px;
+  display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:16px;
+  margin-bottom:24px;
+}
+.registro-banner h3{
+  font-family:'Syne',sans-serif;font-size:1rem;font-weight:800;color:#fff;
+  margin-bottom:4px;
+}
+.registro-banner p{font-size:.78rem;color:rgba(255,255,255,.8);}
+.registro-banner a{
+  background:#fff;color:var(--verde);
+  border-radius:8px;padding:10px 22px;
+  font-size:.82rem;font-weight:700;
+  white-space:nowrap;
+  transition:var(--trans);box-shadow:0 2px 12px rgba(0,0,0,.15);
+}
+.registro-banner a:hover{box-shadow:0 4px 20px rgba(0,0,0,.2);transform:translateY(-1px);}
+ 
+/* WhatsApp flotante */
+.wsp-float{
+  position:fixed;bottom:24px;left:24px;
+  z-index:800;
+  background:var(--verde-light);
+  border-radius:50%;width:52px;height:52px;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 4px 20px rgba(37,184,104,.4);
+  transition:var(--trans);
+}
+.wsp-float:hover{transform:scale(1.08);box-shadow:0 6px 28px rgba(37,184,104,.55);}
+.wsp-float img{width:26px;height:26px;filter:brightness(10);}
+ 
+/* Escudo/bandera mini en sidebar */
+.sb-municipio{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 12px;
+  background:var(--azul-pale);
+  border-radius:var(--radio-sm);
+  margin-bottom:8px;
+}
+.sb-municipio img{width:32px;height:32px;object-fit:contain;}
+.sb-municipio-info .nm{font-size:.78rem;font-weight:700;color:var(--azul);}
+.sb-municipio-info .st{font-size:.67rem;color:var(--gris-60);}
+ 
+/* Tab selector */
+.tab-bar{
+  display:flex;gap:4px;
+  background:var(--gris-10);
+  border:1px solid var(--gris-20);
+  border-radius:10px;padding:4px;
+  margin-bottom:20px;
+  width:fit-content;
+}
+.tab-btn{
+  background:none;border:none;
+  padding:7px 18px;border-radius:7px;
+  font-size:.78rem;font-weight:500;
+  color:var(--gris-60);transition:var(--trans);
+}
+.tab-btn.active{background:#fff;color:var(--azul);box-shadow:var(--sombra-sm);font-weight:700;}
+</style>
 </head>
 <body>
-
-    <!-- ========== HEADER ========== -->
-    <header class="header" id="header">
-        <button class="menu-toggle" id="menuToggle" aria-label="Menú">☰</button>
-        <img
-        src="https://github.com/jhonmalorne/CoordinacionLosGuayos/blob/main/logo%20concertacion.jpg?raw=true"
-        alt="Logo Concertación" class="header-logo" loading="eager"
-        onerror="this.style.display='none'">
-        <img
-        src="https://github.com/jhonmalorne/CoordinacionLosGuayos/blob/main/Imagen%20superior.jpg?raw=true"
-        alt="Banner Concertación Los Guayos" class="header-banner" loading="eager"
-        onerror="this.style.background='linear-gradient(90deg,var(--azul),var(--verde))';this.style.minHeight='40px'">
-        <nav class="header-nav">
-            <a href="#mapa">Mapa</a>
-            <a href="#centros">Centros</a>
-            <a href="#estatutos">Estatutos</a>
-            <a href="#noticias">Noticias</a>
-            <button class="btn-nosotros" id="btnNosotros">NOSOTROS</button>
-        </nav>
-    </header>
-
-    <!-- ========== OVERLAY SIDEBAR MÓVIL ========== -->
-    <div class="overlay" id="sidebarOverlay"></div>
-
-    <!-- ========== APP LAYOUT ========== -->
-    <div class="app-layout">
-
-        <!-- ========== SIDEBAR ========== -->
-        <aside class="sidebar scrollbar-thin" id="sidebar">
-            <div class="sidebar-escudos">
-                <img src="https://github.com/jhonmalorne/CoordinacionLosGuayos/blob/main/Bandera_Los_Guayos_Carabobo.png?raw=true"
-                alt="Bandera Los Guayos" loading="lazy"
-                onerror="this.style.display='none'">
-                <img src="https://github.com/jhonmalorne/CoordinacionLosGuayos/blob/main/Escudo_Los_Guayos_Carabobo.png?raw=true"
-                alt="Escudo Los Guayos" loading="lazy"
-                onerror="this.style.display='none'">
-            </div>
-            <div class="sidebar-header">
-                <h3>Municipio Los Guayos</h3>
-                <p class="subtitle">Parroquia Los Guayos</p>
-            </div>
-            <p style="font-weight:700;font-size:0.85rem;color:var(--azul);margin-bottom:6px;">📋 Sectores Organizados</p>
-            <ul class="sector-list" id="sectorList"></ul>
-            <button class="add-sector-btn" id="addSectorBtn">＋ Agregar Sector</button>
-        </aside>
-
-        <!-- ========== MAIN CONTENT ========== -->
-        <main class="main-content scrollbar-thin" id="mainContent">
-
-            <!-- MAPA -->
-            <section id="mapa">
-                <h2 class="section-title">🗺️ Mapa Estratégico Municipal</h2>
-                <p class="section-subtitle">Visualización territorial de Los Guayos — Centros de votación y zonas de influencia</p>
-                <div class="card map-card">
-                    <iframe
-                    src="https://jhonmalorne.github.io/mapaestrategicolosguayos/"
-                title="Mapa Estratégico Los Guayos" loading="lazy"></iframe>
-            </div>
-        </section>
-
-        <!-- ESTADÍSTICAS -->
-        <section style="margin-top:20px;">
-            <div class="stats-grid" id="statsGrid">
-                <div class="stat-card">
-                    <div class="stat-value" id="totalCentros">46</div>
-                    <div class="stat-label">Centros de Votación</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-value" id="totalMesas">—</div>
-                    <div class="stat-label">Mesas Totales</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-value" id="totalVotantes">—</div>
-                    <div class="stat-label">Votantes Totales</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-value" id="totalSectores">11</div>
-                    <div class="stat-label">Sectores Organizados</div>
-                </div>
-            </div>
-        </section>
-
-        <!-- CENTROS DE VOTACIÓN -->
-        <section id="centros" style="margin-top:10px;">
-            <h2 class="section-title">🏫 Centros de Votación</h2>
-            <p class="section-subtitle">46 centros · Haz clic en cada tarjeta para gestionar coordinadores, mesas y voceros</p>
-            <div class="centros-grid" id="centrosGrid"></div>
-        </section>
-
-        <!-- ESTATUTOS -->
-        <section id="estatutos" style="margin-top:24px;">
-            <h2 class="section-title">📜 Estatutos & Documentos</h2>
-            <p class="section-subtitle">Información básica de Concertación Ciudadana</p>
-            <div class="card">
-                <div class="card-header">📄 Documentos Oficiales</div>
-                <p style="font-size:0.85rem;color:var(--gris-texto);">Estatutos de Concertación Ciudadana · Reglamento Interno · Código de Ética · Manual de Organización Territorial</p>
-                <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:10px;">
-                    <span class="badge badge-azul">📥 Estatutos PDF</span>
-                    <span class="badge badge-verde">📥 Reglamento</span>
-                    <span class="badge badge-azul">📥 Código de Ética</span>
-                    <span class="badge badge-verde">📥 Manual Territorial</span>
-                </div>
-            </div>
-        </section>
-
-        <!-- NOTICIAS -->
-        <section id="noticias" style="margin-top:20px;">
-            <h2 class="section-title">📰 Noticias & Actualidad</h2>
-            <p class="section-subtitle">Información para líderes sectoriales · César Pérez Vivas · María Corina Machado</p>
-            <div class="card">
-                <div class="card-header">🔷 Concertación Ciudadana en Acción</div>
-                <p style="font-size:0.85rem;color:var(--gris-texto);">Mantente informado sobre las actividades de Concertación en Carabobo. Sigue a César Pérez Vivas y María Corina Machado para las últimas actualizaciones del movimiento ciudadano.</p>
-                <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:10px;">
-                    <a href="https://www.instagram.com/concertacionlosguayos/" target="_blank" rel="noopener" class="badge badge-azul" style="text-decoration:none;">📸 Instagram</a>
-                    <a href="https://www.facebook.com/ConcertacionCiudadanaCarabobo" target="_blank" rel="noopener" class="badge badge-verde" style="text-decoration:none;">📘 Facebook</a>
-                    <a href="https://whatsapp.com/channel/0029VbCN9F9Bqbr6yvRiYF3L" target="_blank" rel="noopener" class="badge badge-azul" style="text-decoration:none;">📲 Canal WhatsApp</a>
-                </div>
-            </div>
-        </section>
-    </main>
-</div>
-
-<!-- ========== PANEL NOSOTROS ========== -->
-<div class="overlay" id="panelOverlay"></div>
-<div class="panel-nosotros scrollbar-thin" id="panelNosotros">
-    <div class="panel-header">
-        <h3>🏛️ NOSOTROS — Estructura Directiva</h3>
-        <button class="panel-close" id="panelClose">✕</button>
-    </div>
-    <div class="panel-body" id="panelBody">
-        <!-- CDM -->
-        <div class="org-section">
-            <div class="org-title">📌 CDM — Comité Directivo Municipal</div>
-            <p style="font-size:0.78rem;color:var(--gris-texto);margin-bottom:8px;">Órgano de dirección en cada Municipio</p>
-            <div class="org-tree" id="cdmTree"></div>
+ 
+<!-- ============================================================
+     HEADER
+     ============================================================ -->
+<header id="header">
+  <button id="menu-toggle" aria-label="Menú" onclick="toggleSidebar()">
+    <span></span><span></span><span></span>
+  </button>
+ 
+  <div class="logo-wrap">
+    <img src="https://github.com/jhonmalorne/CoordinacionLosGuayos/blob/main/logo%20concertacion.jpg?raw=true" alt="Concertación" onerror="this.style.display='none'"/>
+    <div class="logo-text">CONCERTACIÓN<br><span>LOS GUAYOS</span></div>
+  </div>
+ 
+  <div id="header-banner">
+    <img src="https://github.com/jhonmalorne/CoordinacionLosGuayos/blob/main/Imagen%20superior.jpg?raw=true" alt="Banner" onerror="this.style.display='none'"/>
+    <div class="banner-txt">PORTAL ESTRATÉGICO MUNICIPAL · CARABOBO · VENEZUELA</div>
+  </div>
+ 
+  <nav>
+    <button class="nav-btn active" onclick="showSection('inicio')">Inicio</button>
+    <button class="nav-btn" onclick="showSection('nosotros')">Nosotros</button>
+    <button class="nav-btn" onclick="showSection('electoral')">Electoral</button>
+    <button class="nav-btn" onclick="showSection('estatutos')">Estatutos</button>
+    <button class="nav-btn" onclick="showSection('noticias')">Noticias</button>
+    <a class="nav-btn cta" href="https://concertacion-ciudadana.online/registro" target="_blank">Registrarse</a>
+  </nav>
+</header>
+ 
+<!-- ============================================================
+     LAYOUT
+     ============================================================ -->
+<div id="layout">
+ 
+  <!-- SIDEBAR -->
+  <aside id="sidebar">
+    <!-- Municipio -->
+    <div class="sb-section">
+      <div class="sb-title">Territorio</div>
+      <div class="sb-municipio">
+        <img src="https://github.com/jhonmalorne/CoordinacionLosGuayos/blob/main/Escudo_Los_Guayos_Carabobo.png?raw=true" alt="Escudo" onerror="this.style.display='none'"/>
+        <div class="sb-municipio-info">
+          <div class="nm">Municipio Los Guayos</div>
+          <div class="st">Estado Carabobo</div>
         </div>
-        <!-- CDP -->
-        <div class="org-section" style="margin-top:16px;">
-            <div class="org-title">📍 CDP — Comité Directivo Parroquial</div>
-            <p style="font-size:0.78rem;color:var(--gris-texto);margin-bottom:8px;">Órgano de dirección en cada parroquia</p>
-            <div class="org-tree" id="cdpTree"></div>
+      </div>
+      <div class="sb-badge verde">
+        <div class="dot"></div>Parroquia Los Guayos
+      </div>
+    </div>
+ 
+    <!-- Sectores -->
+    <div class="sb-section">
+      <div class="sb-title">Sectores Organizados</div>
+      <div id="sectores-list"></div>
+      <button class="sb-add-btn" onclick="openModal('sector')">+ Agregar Sector</button>
+    </div>
+  </aside>
+ 
+  <!-- MAIN CONTENT -->
+  <main id="main">
+ 
+    <!-- ====== INICIO ====== -->
+    <section id="sec-inicio" class="section active">
+      <div class="page-header">
+        <div class="breadcrumb">Portal Municipal · <span>Inicio</span></div>
+        <h1>Panel Estratégico</h1>
+        <p>Coordinación política y territorial — Los Guayos, Carabobo</p>
+      </div>
+ 
+      <!-- Stats rápidas -->
+      <div class="hero-grid">
+        <div class="stat-card">
+          <div class="stat-num">46</div>
+          <div class="stat-label">Centros de Votación</div>
         </div>
-        <button class="add-sector-btn" id="addSecretariaBtn" style="margin-top:10px;">＋ Agregar Secretaría</button>
+        <div class="stat-card verde">
+          <div class="stat-num" id="total-votantes-stat">0</div>
+          <div class="stat-label">Total de Electores</div>
+        </div>
+        <div class="stat-card accent">
+          <div class="stat-num" id="total-mesas-stat">0</div>
+          <div class="stat-label">Mesas Electorales</div>
+        </div>
+      </div>
+ 
+      <!-- Banner registro -->
+      <div class="registro-banner">
+        <div>
+          <h3>¡Únete a Concertación Los Guayos!</h3>
+          <p>Regístrate como activista y forma parte del cambio en nuestro municipio.</p>
+        </div>
+        <a href="https://concertacion-ciudadana.online/registro" target="_blank">Registrarme ahora →</a>
+      </div>
+ 
+      <!-- Mapa -->
+      <div class="map-wrap">
+        <div class="map-header">
+          <div class="map-dot"></div>
+          <h2>Mapa Estratégico de Los Guayos</h2>
+        </div>
+        <iframe src="https://jhonmalorne.github.io/mapaestrategicolosguayos/" title="Mapa Los Guayos" loading="lazy"></iframe>
+      </div>
+ 
+      <!-- Foto principal -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Liderazgo Nacional</div>
+        </div>
+        <div style="position:relative;overflow:hidden;max-height:300px;">
+          <img src="https://github.com/jhonmalorne/CoordinacionLosGuayos/blob/main/cesar%20perez%20vivas%20y%20maria%20corina%20machado.jpg?raw=true"
+               alt="César Pérez Vivas y María Corina Machado"
+               style="width:100%;object-fit:cover;display:block;"
+               onerror="this.style.display='none'"/>
+          <div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(13,27,46,.8));padding:20px 22px;">
+            <p style="color:#fff;font-family:'Syne',sans-serif;font-size:.95rem;font-weight:700;">César Pérez Vivas · María Corina Machado</p>
+            <p style="color:rgba(255,255,255,.7);font-size:.75rem;">Liderazgo político — Concertación Ciudadana Venezuela</p>
+          </div>
+        </div>
+      </div>
+    </section>
+ 
+    <!-- ====== NOSOTROS ====== -->
+    <section id="sec-nosotros" class="section">
+      <div class="page-header">
+        <div class="breadcrumb">Portal Municipal · <span>Nosotros</span></div>
+        <h1>Estructura Organizativa</h1>
+        <p>Comités Directivos Municipal y Parroquial</p>
+      </div>
+ 
+      <!-- Tabs CDM / CDP -->
+      <div class="tab-bar">
+        <button class="tab-btn active" onclick="switchTab('cdm',this)">CDM — Municipal</button>
+        <button class="tab-btn" onclick="switchTab('cdp',this)">CDP — Parroquial</button>
+      </div>
+ 
+      <div id="tab-cdm" class="org-wrap">
+        <div class="deco-line"></div>
+        <div class="org-level">
+          <div class="org-title">Comité Directivo Municipal (CDM)</div>
+          <p style="font-size:.78rem;color:var(--gris-60);margin-bottom:20px;">Órgano de dirección en el Municipio Los Guayos. Responsable de la coordinación política y electoral.</p>
+          <div class="org-top">
+            <div class="org-node top-node">
+              <div class="cargo">Coordinador Municipal</div>
+              <div class="nombre" id="cdm-coord-nombre">Jhon Álvarez</div>
+              <button class="edit-node-btn" onclick="editNode('cdm-coord','Coordinador Municipal')">Editar</button>
+            </div>
+            <div class="org-node top-node">
+              <div class="cargo">Secretario General Municipal</div>
+              <div class="nombre" id="cdm-sec-nombre">Augusto Salazar</div>
+              <button class="edit-node-btn" onclick="editNode('cdm-sec','Secretario General Municipal')">Editar</button>
+            </div>
+          </div>
+        </div>
+ 
+        <div class="org-level">
+          <div class="org-title">Secretarías Municipales</div>
+          <div class="org-grid" id="cdm-secs"></div>
+          <button class="sb-add-btn" style="max-width:240px;margin-top:12px;" onclick="openModal('secretaria','cdm')">+ Agregar Secretaría</button>
+        </div>
+      </div>
+ 
+      <div id="tab-cdp" class="org-wrap" style="display:none;">
+        <div class="deco-line"></div>
+        <div class="org-level">
+          <div class="org-title">Comité Directivo Parroquial (CDP)</div>
+          <p style="font-size:.78rem;color:var(--gris-60);margin-bottom:20px;">Órgano de dirección en la Parroquia Los Guayos.</p>
+          <div class="org-top">
+            <div class="org-node top-node">
+              <div class="cargo">Coordinador Parroquial</div>
+              <div class="nombre" id="cdp-coord-nombre">Daniela Torrealba</div>
+              <button class="edit-node-btn" onclick="editNode('cdp-coord','Coordinador Parroquial')">Editar</button>
+            </div>
+            <div class="org-node top-node">
+              <div class="cargo">Secretario General Parroquial</div>
+              <div class="nombre vacio" id="cdp-sec-nombre">Sin asignar</div>
+              <button class="edit-node-btn" onclick="editNode('cdp-sec','Secretario General Parroquial')">Editar</button>
+            </div>
+          </div>
+        </div>
+        <div class="org-level">
+          <div class="org-title">Secretarías Parroquiales</div>
+          <div class="org-grid" id="cdp-secs"></div>
+          <button class="sb-add-btn" style="max-width:240px;margin-top:12px;" onclick="openModal('secretaria','cdp')">+ Agregar Secretaría</button>
+        </div>
+      </div>
+    </section>
+ 
+    <!-- ====== ELECTORAL ====== -->
+    <section id="sec-electoral" class="section">
+      <div class="page-header">
+        <div class="breadcrumb">Portal Municipal · <span>Electoral</span></div>
+        <h1>Centros de Votación</h1>
+        <p>Gestión electoral — Los Guayos</p>
+      </div>
+ 
+      <div class="total-bar">
+        <div class="total-pill"><span class="n">46</span> Centros de Votación</div>
+        <div class="total-pill verde"><span class="n" id="total-votantes-pill">0</span> Electores</div>
+        <div class="total-pill"><span class="n" id="total-mesas-pill">0</span> Mesas</div>
+      </div>
+ 
+      <div class="electoral-filters">
+        <input type="text" class="search-input" id="centro-search" placeholder="🔍 Buscar centro de votación..." oninput="filterCentros()"/>
+      </div>
+ 
+      <div class="centros-grid" id="centros-grid"></div>
+    </section>
+ 
+    <!-- ====== ESTATUTOS ====== -->
+    <section id="sec-estatutos" class="section">
+      <div class="page-header">
+        <div class="breadcrumb">Portal Municipal · <span>Estatutos</span></div>
+        <h1>Información Institucional</h1>
+        <p>Concertación Ciudadana — Documentos y estatutos</p>
+      </div>
+ 
+      <div class="info-concertacion">
+        <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px;">
+          <img src="https://github.com/jhonmalorne/CoordinacionLosGuayos/blob/main/logo%20concertacion.jpg?raw=true" style="height:50px;border-radius:8px;" onerror="this.style.display='none'" alt="Logo"/>
+          <div>
+            <h2>Concertación Ciudadana</h2>
+            <p style="font-size:.75rem;opacity:.7;margin-top:2px;">Movimiento político democrático · Venezuela</p>
+          </div>
+        </div>
+        <p>Concertación Ciudadana es un movimiento político democrático comprometido con la libertad, la participación ciudadana y el cambio pacífico en Venezuela. Con presencia en todos los municipios del país, trabaja por la organización territorial, la formación política y la activación electoral de sus militantes.</p>
+      </div>
+ 
+      <div class="docs-grid">
+        <div class="doc-card" onclick="window.open('https://concertacion-ciudadana.online/registro','_blank')">
+          <div class="doc-icon">📋</div>
+          <div class="doc-name">Registro de Militantes</div>
+          <div class="doc-desc">Formulario oficial de inscripción</div>
+        </div>
+        <div class="doc-card" onclick="window.open('https://forms.gle/2U99B8EssGEruMXE9','_blank')">
+          <div class="doc-icon">📝</div>
+          <div class="doc-name">Formulario Interno</div>
+          <div class="doc-desc">Google Forms — activistas</div>
+        </div>
+        <div class="doc-card">
+          <div class="doc-icon">📖</div>
+          <div class="doc-name">Estatutos Orgánicos</div>
+          <div class="doc-desc">Documento por cargar</div>
+        </div>
+        <div class="doc-card">
+          <div class="doc-icon">🗺️</div>
+          <div class="doc-name">Mapa Territorial</div>
+          <div class="doc-desc">Sectores y coordinaciones</div>
+        </div>
+        <div class="doc-card" onclick="window.open('https://jhonmalorne.github.io/mapaestrategicolosguayos/','_blank')">
+          <div class="doc-icon">🗃️</div>
+          <div class="doc-name">Mapa Estratégico</div>
+          <div class="doc-desc">Ver mapa interactivo completo</div>
+        </div>
+        <div class="doc-card">
+          <div class="doc-icon">📊</div>
+          <div class="doc-name">Plan Electoral</div>
+          <div class="doc-desc">Documento por cargar</div>
+        </div>
+      </div>
+    </section>
+ 
+    <!-- ====== NOTICIAS ====== -->
+    <section id="sec-noticias" class="section">
+      <div class="page-header">
+        <div class="breadcrumb">Portal Municipal · <span>Noticias</span></div>
+        <h1>Actualidad Política</h1>
+        <p>Información para líderes y activistas de Concertación</p>
+      </div>
+ 
+      <div class="news-grid">
+        <div class="news-card">
+          <img class="news-img" src="https://github.com/jhonmalorne/CoordinacionLosGuayos/blob/main/cesar%20perez%20vivas%20y%20maria%20corina%20machado.jpg?raw=true" onerror="this.style.background='var(--azul-pale)'" alt="Noticia"/>
+          <div class="news-body">
+            <span class="news-tag">Nacional</span>
+            <div class="news-title">Concertación fortalece su estructura territorial en Carabobo</div>
+            <div class="news-excerpt">El movimiento avanza en la organización municipal con nuevos coordinadores en todos los sectores del estado.</div>
+            <div class="news-meta"><span class="news-date">Mayo 2025</span><span class="news-read">Leer más →</span></div>
+          </div>
+        </div>
+        <div class="news-card">
+          <div class="news-img" style="background:var(--azul-pale);display:flex;align-items:center;justify-content:center;">
+            <span style="font-size:3rem;">📢</span>
+          </div>
+          <div class="news-body">
+            <span class="news-tag verde">Activismo</span>
+            <div class="news-title">Activación sectorial en Los Guayos: nuevos líderes comunitarios</div>
+            <div class="news-excerpt">Se incorporan coordinadores en 11 sectores del municipio reforzando la presencia territorial de Concertación.</div>
+            <div class="news-meta"><span class="news-date">Abril 2025</span><span class="news-read">Leer más →</span></div>
+          </div>
+        </div>
+        <div class="news-card">
+          <div class="news-img" style="background:var(--verde-pale);display:flex;align-items:center;justify-content:center;">
+            <span style="font-size:3rem;">🗳️</span>
+          </div>
+          <div class="news-body">
+            <span class="news-tag">Electoral</span>
+            <div class="news-title">Coordinación de centros de votación para el proceso electoral</div>
+            <div class="news-excerpt">Se asignan responsables en cada uno de los 46 centros de votación del municipio Los Guayos.</div>
+            <div class="news-meta"><span class="news-date">Marzo 2025</span><span class="news-read">Leer más →</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+ 
+  </main><!-- /main -->
+</div><!-- /layout -->
+ 
+<!-- ============================================================
+     FOOTER
+     ============================================================ -->
+<footer id="footer">
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <img src="https://github.com/jhonmalorne/CoordinacionLosGuayos/blob/main/logo%20concertacion.jpg?raw=true" alt="Concertación" onerror="this.style.display='none'"/>
+      <p>Portal Estratégico Municipal de Concertación Los Guayos. Organización política, estructura territorial y coordinación electoral en el Municipio Los Guayos, estado Carabobo, Venezuela.</p>
+      <div class="social-row">
+        <a class="social-icon" href="https://whatsapp.com/channel/0029VbCN9F9Bqbr6yvRiYF3L" target="_blank">
+          <img src="https://github.com/jhonmalorne/CoordinacionLosGuayos/blob/main/iconodewhatsapp.png?raw=true" alt="WhatsApp"/>
+        </a>
+        <a class="social-icon" href="https://www.instagram.com/concertacionlosguayos/" target="_blank">
+          <img src="https://github.com/jhonmalorne/CoordinacionLosGuayos/blob/main/iconoinstagram.png?raw=true" alt="Instagram"/>
+        </a>
+        <a class="social-icon" href="https://www.facebook.com/ConcertacionCiudadanaCarabobo" target="_blank">
+          <img src="https://github.com/jhonmalorne/CoordinacionLosGuayos/blob/main/iconofacebook.png?raw=true" alt="Facebook"/>
+        </a>
+        <a class="social-icon" href="https://www.threads.com/@concertacioncarabobo?hl=es" target="_blank">
+          <img src="https://github.com/jhonmalorne/CoordinacionLosGuayos/blob/main/iconotreads.png?raw=true" alt="Threads"/>
+        </a>
+      </div>
     </div>
-</div>
-
-<!-- ========== MODAL GENÉRICO ========== -->
-<div class="modal-overlay" id="modalOverlay">
-    <div class="modal" id="modalContent"></div>
-</div>
-
-<!-- ========== FOOTER ========== -->
-<footer class="footer">
-    <div class="footer-social">
-        <a href="https://whatsapp.com/channel/0029VbCN9F9Bqbr6yvRiYF3L" target="_blank" rel="noopener">
-            <img src="https://github.com/jhonmalorne/CoordinacionLosGuayos/blob/main/iconodewhatsapp.png?raw=true" alt="WhatsApp" loading="lazy" onerror="this.style.display='none'"> WhatsApp
-        </a>
-        <a href="https://www.facebook.com/ConcertacionCiudadanaCarabobo" target="_blank" rel="noopener">
-            <img src="https://github.com/jhonmalorne/CoordinacionLosGuayos/blob/main/iconofacebook.png?raw=true" alt="Facebook" loading="lazy" onerror="this.style.display='none'"> Facebook
-        </a>
-        <a href="https://www.instagram.com/concertacionlosguayos/" target="_blank" rel="noopener">
-            <img src="https://github.com/jhonmalorne/CoordinacionLosGuayos/blob/main/iconoinstagram.png?raw=true" alt="Instagram" loading="lazy" onerror="this.style.display='none'"> Instagram
-        </a>
-        <a href="https://jhonmalorne.github.io/mapaestrategicolosguayos/" target="_blank" rel="noopener">
-            <img src="https://github.com/jhonmalorne/CoordinacionLosGuayos/blob/main/iconomaps.png?raw=true" alt="Mapa" loading="lazy" onerror="this.style.display='none'"> Mapa
-        </a>
-        <a href="https://www.threads.com/@concertacioncarabobo?hl=es" target="_blank" rel="noopener">
-            <img src="https://github.com/jhonmalorne/CoordinacionLosGuayos/blob/main/iconotreads.png?raw=true" alt="Threads" loading="lazy" onerror="this.style.display='none'"> Threads
-        </a>
+    <div class="footer-col">
+      <h4>Portal</h4>
+      <ul>
+        <li onclick="showSection('inicio')">Panel de Inicio</li>
+        <li onclick="showSection('nosotros')">Estructura Organizativa</li>
+        <li onclick="showSection('electoral')">Centros de Votación</li>
+        <li onclick="showSection('estatutos')">Estatutos</li>
+        <li onclick="showSection('noticias')">Noticias</li>
+      </ul>
     </div>
-    <p class="footer-text">
-        <strong>Concertación Los Guayos</strong> — Portal Estratégico Municipal<br>
-        ⚠️ <strong>No se tiene ningún padrón electoral.</strong> Toda la información es de carácter organizativo interno.<br>
-        «Unidad, organización y acción política para el cambio»
-    </p>
-    <div class="footer-links">
-        <a href="https://concertacion-ciudadana.online/registro" target="_blank" rel="noopener">Registro</a>
-        <a href="https://forms.gle/2U99B8EssGEruMXE9" target="_blank" rel="noopener">Formulario</a>
-        <a href="#mapa">Mapa</a>
-        <a href="#centros">Centros</a>
+    <div class="footer-col">
+      <h4>Participación</h4>
+      <ul>
+        <li><a href="https://concertacion-ciudadana.online/registro" target="_blank">Registrarse</a></li>
+        <li><a href="https://forms.gle/2U99B8EssGEruMXE9" target="_blank">Formulario Interno</a></li>
+        <li><a href="https://whatsapp.com/channel/0029VbCN9F9Bqbr6yvRiYF3L" target="_blank">Canal WhatsApp</a></li>
+      </ul>
     </div>
+    <div class="footer-col">
+      <h4>Territorio</h4>
+      <ul>
+        <li>Municipio Los Guayos</li>
+        <li>Parroquia Los Guayos</li>
+        <li>Estado Carabobo</li>
+        <li>Venezuela</li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2025 Concertación Los Guayos — Portal Estratégico Municipal</p>
+    <div class="footer-notice">⚠️ No se tiene ningún padrón electoral</div>
+  </div>
 </footer>
-
+ 
+<!-- WhatsApp flotante -->
+<a class="wsp-float" href="https://whatsapp.com/channel/0029VbCN9F9Bqbr6yvRiYF3L" target="_blank" title="Canal WhatsApp">
+  <img src="https://github.com/jhonmalorne/CoordinacionLosGuayos/blob/main/iconodewhatsapp.png?raw=true" alt="WhatsApp"/>
+</a>
+ 
+<!-- ============================================================
+     MODAL
+     ============================================================ -->
+<div class="modal-overlay" id="modal" onclick="closeModalOutside(event)">
+  <div class="modal">
+    <div class="modal-head">
+      <h3 id="modal-title">Agregar</h3>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+ 
+<!-- TOAST -->
+<div class="toast" id="toast">✓ Guardado exitosamente</div>
+ 
+<!-- ============================================================
+     JAVASCRIPT
+     ============================================================ -->
 <script>
-    (function() {
-        // ==================== DATOS INICIALES ====================
-        const DEFAULT_SECTORS = [
-            { name: 'Felix Rios', coordinator: 'Jhon Alvarez', whatsapp: '' },
-            { name: 'Rosalinda', coordinator: 'Maggie', whatsapp: '' },
-            { name: 'Malabar', coordinator: 'Rosa Farias', whatsapp: '' },
-            { name: 'Roble', coordinator: 'Augusto Salazar', whatsapp: '' },
-            { name: 'Charal', coordinator: 'Giovani', whatsapp: '' },
-            { name: 'Mata Verde', coordinator: 'Angela', whatsapp: '' },
-            { name: 'Cerritos', coordinator: 'Baldwyn / Nico', whatsapp: '' },
-            { name: 'Araguaney', coordinator: 'Maria Jimenez', whatsapp: '' },
-            { name: 'La Culebra', coordinator: 'Margarita', whatsapp: '' },
-            { name: 'Aguitas', coordinator: 'La Nena', whatsapp: '' },
-            { name: 'Simon Bolivar', coordinator: 'Felicia', whatsapp: '' },
-        ];
-
-        const DEFAULT_CDM = [
-            { position: 'Coordinador Municipal', person: 'Jhon Alvarez', proposals: [] },
-            { position: 'Secretario General Municipal', person: 'Augusto Salazar', proposals: [] },
-            { position: 'Secretario de Organización', person: '', proposals: [] },
-            { position: 'Secretario de Comunicación', person: '', proposals: [] },
-            { position: 'Secretario Gremial', person: '', proposals: [] },
-            { position: 'Secretario Sindical', person: '', proposals: [] },
-            { position: 'Secretario de Acción Política', person: '', proposals: [] },
-            { position: 'Secretario de Formación', person: '', proposals: [] },
-            { position: 'Secretario de Salud', person: 'Nicoisa Andrea', proposals: [] },
-            { position: 'Secretario de Jóvenes', person: '', proposals: [] },
-            { position: 'Secretario de Mujeres', person: 'Rosa Farias', proposals: [] },
-            { position: 'Secretario Agropecuario', person: '', proposals: [] },
-            { position: 'Secretario de Asuntos Sociales', person: '', proposals: [] },
-            { position: 'Secretario de Activismo', person: '', proposals: [] },
-            { position: 'Secretario Electoral', person: '', proposals: [] },
-            { position: 'Secretario de Deporte', person: '', proposals: [] },
-            { position: 'Secretario Adulto Mayor', person: '', proposals: [] },
-            { position: 'Secretario Religión Católica', person: '', proposals: [] },
-            { position: 'Secretario Religión Cristiana', person: '', proposals: [] },
-            { position: 'Secretaria de Cultura', person: '', proposals: [] },
-            { position: 'Secretaria de Turismo', person: '', proposals: [] },
-            { position: 'Secretaria Ecológica Sustentable', person: '', proposals: [] },
-        ];
-
-        const DEFAULT_CDP = [
-            { position: 'Coordinador Parroquial', person: 'Daniela Torrealba', proposals: [] },
-            { position: 'Secretario General Parroquial', person: '', proposals: [] },
-            { position: 'Secretario de Organización', person: '', proposals: [] },
-            { position: 'Secretario de Comunicación', person: '', proposals: [] },
-            { position: 'Secretario Gremial', person: '', proposals: [] },
-            { position: 'Secretario Sindical', person: '', proposals: [] },
-            { position: 'Secretario de Acción Política', person: '', proposals: [] },
-            { position: 'Secretario de Formación', person: '', proposals: [] },
-            { position: 'Secretario de Salud', person: '', proposals: [] },
-            { position: 'Secretario de Jóvenes', person: '', proposals: [] },
-            { position: 'Secretario de Mujeres', person: '', proposals: [] },
-            { position: 'Secretario Agropecuario', person: '', proposals: [] },
-            { position: 'Secretario de Asuntos Sociales', person: '', proposals: [] },
-            { position: 'Secretario de Activismo', person: '', proposals: [] },
-            { position: 'Secretario Electoral', person: '', proposals: [] },
-            { position: 'Secretario de Deporte', person: '', proposals: [] },
-            { position: 'Secretario Adulto Mayor', person: '', proposals: [] },
-            { position: 'Secretario Religión Católica', person: '', proposals: [] },
-            { position: 'Secretario Religión Cristiana', person: '', proposals: [] },
-            { position: 'Secretaria de Cultura', person: '', proposals: [] },
-            { position: 'Secretaria de Turismo', person: '', proposals: [] },
-            { position: 'Secretaria Ecológica Sustentable', person: '', proposals: [] },
-        ];
-
-        const DEFAULT_CENTROS = [
-            { name: 'UNIDAD EDUCATIVA SANTISIMA TRINIDAD', mesas: 5, votantes: 4106, coord1: '',
-                coord2: '', coordPolitico: '', logistica: '', movilizacion: '', voceros: [], adjuntos: [] },
-            { name: 'ESCUELA BASICA LICENCIADA ELISA GUEVARA DE CACERES', mesas: 3, votantes: 2751, coord1: '',
-                coord2: '', coordPolitico: '', logistica: '', movilizacion: '', voceros: [], adjuntos: [] },
-            { name: 'JARDIN DE INFANCIA LAS AGUITAS', mesas: 4, votantes: 3079, coord1: '', coord2: '',
-                coordPolitico: '', logistica: '', movilizacion: '', voceros: [], adjuntos: [] },
-            { name: 'INSTITUTO DE EDUCACION ESPECIAL LAS AGUITAS', mesas: 3, votantes: 2411, coord1: '',
-                coord2: '', coordPolitico: '', logistica: '', movilizacion: '', voceros: [], adjuntos: [] },
-            { name: 'LICEO NACIONAL BOLIVARIANO ANDRES BELLO', mesas: 6, votantes: 5109, coord1: '', coord2: '',
-                coordPolitico: '', logistica: '', movilizacion: '', voceros: [], adjuntos: [] },
-            { name: 'ESCUELA BASICA NACIONAL LAS AGUITAS I Y II JULIO GARMENDIA', mesas: 3, votantes: 2352,
-                coord1: '', coord2: '', coordPolitico: '', logistica: '', movilizacion: '', voceros: [],
-            adjuntos: [] },
-            { name: 'ANEXO RURAL 6', mesas: 4, votantes: 3062, coord1: '', coord2: '', coordPolitico: '',
-                logistica: '', movilizacion: '', voceros: [], adjuntos: [] },
-            { name: 'MARIA FIDELA CHIRINOS', mesas: 2, votantes: 1633, coord1: '', coord2: '', coordPolitico: '',
-                logistica: '', movilizacion: '', voceros: [], adjuntos: [] },
-            { name: 'GRUPO ESCOLAR BATALLA DE AYACUCHO', mesas: 6, votantes: 2134, coord1: '', coord2: '',
-                coordPolitico: '', logistica: '', movilizacion: '', voceros: [], adjuntos: [] },
-            { name: 'PRE-ESCOLAR BATALLA DE JUNIN', mesas: 6, votantes: 5912, coord1: '', coord2: '',
-                coordPolitico: '', logistica: '', movilizacion: '', voceros: [], adjuntos: [] },
-            { name: 'GRUPO ESCOLAR YORACO', mesas: 7, votantes: 6161, coord1: '', coord2: '', coordPolitico: '',
-                logistica: '', movilizacion: '', voceros: [], adjuntos: [] },
-            { name: 'UNIDAD EDUCATIVA LICEO BOLIVARIANO LA GLORIETA', mesas: 1, votantes: 856, coord1: '',
-                coord2: '', coordPolitico: '', logistica: '', movilizacion: '', voceros: [], adjuntos: [] },
-            { name: 'UNIDAD EDUCATIVA SIMON JOSE GUEDEZ ORTIZ', mesas: 2, votantes: 1065, coord1: '', coord2: '',
-                coordPolitico: '', logistica: '', movilizacion: '', voceros: [], adjuntos: [] },
-            { name: 'ESCUELA NACIONAL PIRITAL', mesas: 2, votantes: 1214, coord1: '', coord2: '', coordPolitico: '',
-                logistica: '', movilizacion: '', voceros: [], adjuntos: [] },
-            { name: 'JARDIN DE INFANCIA CABRIALES', mesas: 4, votantes: 3006, coord1: '', coord2: '',
-                coordPolitico: '', logistica: '', movilizacion: '', voceros: [], adjuntos: [] },
-            { name: 'ESCUELA BASICA NACIONAL BOLIVARIANA LOS CERRITOS', mesas: 5, votantes: 4495, coord1: '',
-                coord2: '', coordPolitico: '', logistica: '', movilizacion: '', voceros: [], adjuntos: [] },
-            { name: 'UNIDAD EDUCATIVA ESTADAL MARIA ESCAMILLO', mesas: 1, votantes: 893, coord1: '', coord2: '',
-                coordPolitico: '', logistica: '', movilizacion: '', voceros: [], adjuntos: [] },
-            { name: 'ESCUELA BASICA NACIONAL BOLIVARIANA LAS AGUITAS III', mesas: 5, votantes: 4381, coord1: '',
-                coord2: '', coordPolitico: '', logistica: '', movilizacion: '', voceros: [], adjuntos: [] },
-            { name: 'UNIDAD BASICA RAMONA DE ROMERO', mesas: 3, votantes: 2906, coord1: '', coord2: '',
-                coordPolitico: '', logistica: '', movilizacion: '', voceros: [], adjuntos: [] },
-            { name: 'GRUPO ESCOLAR LOS HIJOS DE BOLIVAR', mesas: 3, votantes: 2892, coord1: '', coord2: '',
-                coordPolitico: '', logistica: '', movilizacion: '', voceros: [], adjuntos: [] },
-            { name: 'ESCUELA BOLIVARIANA LOS CERRITOS', mesas: 8, votantes: 6933, coord1: '', coord2: '',
-                coordPolitico: '', logistica: '', movilizacion: '', voceros: [], adjuntos: [] },
-            { name: 'UNIDAD EDUCATIVA BOLIVARIANA RURAL LA DIOSA DE LOS TACARIGUAS', mesas: 1, votantes: 755,
-                coord1: '', coord2: '', coordPolitico: '', logistica: '', movilizacion: '', voceros: [],
-            adjuntos: [] },
-            { name: 'UNIDAD EDUCATIVA ANTONIO JOSE DE SUCRE', mesas: 4, votantes: 3974, coord1: '', coord2: '',
-                coordPolitico: '', logistica: '', movilizacion: '', voceros: [], adjuntos: [] },
-            { name: 'UNIDAD EDUCATIVA LUISA TERESA DE MONTEMAYOR', mesas: 4, votantes: 3238, coord1: '', coord2: '',
-                coordPolitico: '', logistica: '', movilizacion: '', voceros: [], adjuntos: [] },
-            { name: 'ESCUELA BASICA ARTURO USLAR PIETRI', mesas: 3, votantes: 2320, coord1: '', coord2: '',
-                coordPolitico: '', logistica: '', movilizacion: '', voceros: [], adjuntos: [] },
-            { name: 'PRE-ESCOLAR TACARIGUA I', mesas: 3, votantes: 2985, coord1: '', coord2: '', coordPolitico: '',
-                logistica: '', movilizacion: '', voceros: [], adjuntos: [] },
-            { name: 'ESCUELA TECNOLOGICA RURAL FRANCISCO DE MIRANDA', mesas: 2, votantes: 1155, coord1: '',
-                coord2: '', coordPolitico: '', logistica: '', movilizacion: '', voceros: [], adjuntos: [] },
-            { name: 'UNIDAD EDUCATIVA DIVINO NIÑO', mesas: 2, votantes: 1866, coord1: '', coord2: '',
-                coordPolitico: '', logistica: '', movilizacion: '', voceros: [], adjuntos: [] },
-            { name: 'UNIDAD EDUCATIVA MANUELA SAENZ', mesas: 1, votantes: 993, coord1: '', coord2: '',
-                coordPolitico: '', logistica: '', movilizacion: '', voceros: [], adjuntos: [] },
-            { name: 'JARDIN DE INFANCIA EL ROBLE', mesas: 3, votantes: 2117, coord1: '', coord2: '',
-                coordPolitico: '', logistica: '', movilizacion: '', voceros: [], adjuntos: [] },
-            { name: 'ESCUELA DE ESPECIALIDADES FEMENINAS', mesas: 2, votantes: 1411, coord1: '', coord2: '',
-                coordPolitico: '', logistica: '', movilizacion: '', voceros: [], adjuntos: [] },
-            { name: 'CENTRO EDUCACION INICIAL GUAPARO', mesas: 2, votantes: 1689, coord1: '', coord2: '',
-                coordPolitico: '', logistica: '', movilizacion: '', voceros: [], adjuntos: [] },
-            { name: 'ESCUELA BOLIVARIANA NACIONAL LA UNION', mesas: 2, votantes: 1048, coord1: '', coord2: '',
-                coordPolitico: '', logistica: '', movilizacion: '', voceros: [], adjuntos: [] },
-            { name: 'ESCUELA BASICA ESTADAL MIGUEL OTERO SILVA', mesas: 1, votantes: 815, coord1: '', coord2: '',
-                coordPolitico: '', logistica: '', movilizacion: '', voceros: [], adjuntos: [] },
-            { name: 'UNIDAD EDUCATIVA VICENTE EMPARAN', mesas: 2, votantes: 1349, coord1: '', coord2: '',
-                coordPolitico: '', logistica: '', movilizacion: '', voceros: [], adjuntos: [] },
-            { name: 'MATERNAL PANCHITO MANDEFUA', mesas: 2, votantes: 1401, coord1: '', coord2: '',
-                coordPolitico: '', logistica: '', movilizacion: '', voceros: [], adjuntos: [] },
-            { name: 'ESCUELA BASICA JUAN VICENTE GONZALEZ DELGADO', mesas: 2, votantes: 1876, coord1: '', coord2: '',
-                coordPolitico: '', logistica: '', movilizacion: '', voceros: [], adjuntos: [] },
-            { name: 'CENTRO EDUCACION INICIAL LIBERTADOR', mesas: 1, votantes: 869, coord1: '', coord2: '',
-                coordPolitico: '', logistica: '', movilizacion: '', voceros: [], adjuntos: [] },
-            { name: 'CENTRO DE ATENCION PARA NIÑOS NIÑAS JOVENES Y ADOLESCENTES CON DIFICULTADES DE APRENDIZAJE',
-                mesas: 3, votantes: 2222, coord1: '', coord2: '', coordPolitico: '', logistica: '',
-                movilizacion: '', voceros: [], adjuntos: [] },
-            { name: 'ESCUELA BASICA EL ROBLE', mesas: 1, votantes: 639, coord1: '', coord2: '', coordPolitico: '',
-                logistica: '', movilizacion: '', voceros: [], adjuntos: [] },
-            { name: 'CENTRO DE VOTACION 23 DE ENERO', mesas: 2, votantes: 1223, coord1: '', coord2: '',
-                coordPolitico: '', logistica: '', movilizacion: '', voceros: [], adjuntos: [] },
-            { name: 'CENTRO DE VOTACION 12 DE MARZO', mesas: 1, votantes: 580, coord1: '', coord2: '',
-                coordPolitico: '', logistica: '', movilizacion: '', voceros: [], adjuntos: [] },
-            { name: 'BASE DE MISION SANTA ROSA ALI PRIMERA', mesas: 1, votantes: 250, coord1: '', coord2: '',
-                coordPolitico: '', logistica: '', movilizacion: '', voceros: [], adjuntos: [] },
-            { name: 'CENTRO DE EDUCACION INICIAL SIMONCITO ARAGUITA', mesas: 1, votantes: 351, coord1: '', coord2: '',
-                coordPolitico: '', logistica: '', movilizacion: '', voceros: [], adjuntos: [] },
-            { name: 'PRE-ESCOLAR LA ALEGRIA', mesas: 1, votantes: 370, coord1: '', coord2: '', coordPolitico: '',
-                logistica: '', movilizacion: '', voceros: [], adjuntos: [] },
-            { name: 'PRE-ESCOLAR ZAIDA CEDEÑO', mesas: 1, votantes: 457, coord1: '', coord2: '', coordPolitico: '',
-                logistica: '', movilizacion: '', voceros: [], adjuntos: [] },
-        ];
-
-        // ==================== LOCAL STORAGE ====================
-        function loadData(key, defaultData) {
-            try {
-                const stored = localStorage.getItem('concertacion_' + key);
-                if (stored) return JSON.parse(stored);
-            } catch (e) { /* fallback */ }
-            return JSON.parse(JSON.stringify(defaultData));
-        }
-
-        function saveData(key, data) {
-            try {
-                localStorage.setItem('concertacion_' + key, JSON.stringify(data));
-            } catch (e) {
-                showToast('⚠️ Error al guardar datos');
-            }
-        }
-
-        let sectores = loadData('sectores', DEFAULT_SECTORS);
-        let cdm = loadData('cdm', DEFAULT_CDM);
-        let cdp = loadData('cdp', DEFAULT_CDP);
-        let centros = loadData('centros', DEFAULT_CENTROS);
-
-        function persistSectores() { saveData('sectores', sectores); }
-        function persistCDM() { saveData('cdm', cdm); }
-        function persistCDP() { saveData('cdp', cdp); }
-        function persistCentros() { saveData('centros', centros); }
-
-        // ==================== TOAST ====================
-        function showToast(msg) {
-            const t = document.createElement('div');
-            t.className = 'toast';
-            t.textContent = msg;
-            document.body.appendChild(t);
-            setTimeout(() => t.remove(), 2500);
-        }
-
-        // ==================== RENDER SIDEBAR ====================
-        function renderSidebar() {
-            const list = document.getElementById('sectorList');
-            list.innerHTML = sectores.map((s, i) => `
-            <li class="sector-item">
-              <div class="sector-name">
-                📍 ${escHTML(s.name)}
-                <span style="font-size:0.7rem;color:var(--gris-texto);">${escHTML(s.coordinator || 'Sin coord.')}</span>
-              </div>
-              ${s.whatsapp ? `<div style="font-size:0.7rem;color:var(--verde);">📲 ${escHTML(s.whatsapp)}</div>` : ''}
-              <div class="sector-actions">
-                <button onclick="editSector(${i})" title="Editar">✏️</button>
-                <button class="del" onclick="deleteSector(${i})" title="Eliminar">🗑️</button>
-              </div>
-            </li>
-          `).join('');
-            document.getElementById('totalSectores').textContent = sectores.length;
-        }
-
-        function escHTML(str) {
-            const div = document.createElement('div');
-            div.textContent = str;
-            return div.innerHTML;
-        }
-
-        window.editSector = function(i) {
-            const s = sectores[i];
-            showModal('Editar Sector', `
-            <input id="modSectorName" value="${escHTML(s.name)}" placeholder="Nombre del sector">
-            <input id="modSectorCoord" value="${escHTML(s.coordinator || '')}" placeholder="Nombre y apellido del coordinador">
-            <input id="modSectorWA" value="${escHTML(s.whatsapp || '')}" placeholder="Teléfono WhatsApp (opcional)">
-          `, () => {
-                const name = document.getElementById('modSectorName').value.trim();
-                const coord = document.getElementById('modSectorCoord').value.trim();
-                const wa = document.getElementById('modSectorWA').value.trim();
-                if (!name) { showToast('⚠️ El nombre del sector es obligatorio'); return; }
-                sectores[i] = { name, coordinator: coord, whatsapp: wa };
-                persistSectores();
-                renderSidebar();
-                closeModal();
-                showToast('✅ Sector actualizado');
-            });
-        };
-
-        window.deleteSector = function(i) {
-            if (confirm('¿Eliminar el sector "' + sectores[i].name + '"? Esta acción no se puede deshacer.')) {
-                sectores.splice(i, 1);
-                persistSectores();
-                renderSidebar();
-                showToast('🗑️ Sector eliminado');
-            }
-        };
-
-        document.getElementById('addSectorBtn').addEventListener('click', () => {
-            showModal('Nuevo Sector', `
-            <input id="modSectorName" placeholder="Nombre del sector">
-            <input id="modSectorCoord" placeholder="Nombre y apellido del coordinador">
-            <input id="modSectorWA" placeholder="Teléfono WhatsApp (opcional)">
-          `, () => {
-                const name = document.getElementById('modSectorName').value.trim();
-                const coord = document.getElementById('modSectorCoord').value.trim();
-                const wa = document.getElementById('modSectorWA').value.trim();
-                if (!name) { showToast('⚠️ El nombre del sector es obligatorio'); return; }
-                sectores.push({ name, coordinator: coord, whatsapp: wa });
-                persistSectores();
-                renderSidebar();
-                closeModal();
-                showToast('✅ Sector agregado');
-            });
-        });
-
-        // ==================== RENDER CENTROS ====================
-        function renderCentros() {
-            const grid = document.getElementById('centrosGrid');
-            grid.innerHTML = centros.map((c, i) => `
-            <div class="centro-card" id="centroCard${i}" onclick="toggleCentro(${i})">
-              <div class="centro-name">🏫 ${escHTML(c.name)}</div>
-              <div class="centro-meta">
-                <span>🪑 ${c.mesas} mesas</span>
-                <span class="votantes">👥 ${c.votantes.toLocaleString()} votantes</span>
-              </div>
-              <div class="centro-detail" id="centroDetail${i}">
-                <div class="detail-row"><strong>Coord. Centro 1:</strong> <input id="cc1_${i}" value="${escHTML(c.coord1||'')}" placeholder="Nombre"></div>
-                <div class="detail-row"><strong>Coord. Centro 2:</strong> <input id="cc2_${i}" value="${escHTML(c.coord2||'')}" placeholder="Nombre"></div>
-                <div class="detail-row"><strong>Coord. Político:</strong> <input id="ccp_${i}" value="${escHTML(c.coordPolitico||'')}" placeholder="Nombre"></div>
-                <div class="detail-row"><strong>Logística:</strong> <input id="clog_${i}" value="${escHTML(c.logistica||'')}" placeholder="Nombre"></div>
-                <div class="detail-row"><strong>Movilización:</strong> <input id="cmov_${i}" value="${escHTML(c.movilizacion||'')}" placeholder="Nombre"></div>
-                <div class="detail-row"><strong>Voceros x Mesa:</strong> <input id="cvoc_${i}" value="${escHTML((c.voceros||[]).join(', '))}" placeholder="Separar por comas"></div>
-                <div class="detail-row"><strong>Adjuntos x Mesa:</strong> <input id="cadj_${i}" value="${escHTML((c.adjuntos||[]).join(', '))}" placeholder="Separar por comas"></div>
-                <button class="save-btn-mini" onclick="event.stopPropagation();saveCentro(${i})">💾 Guardar</button>
-              </div>
+/* =========================================================
+   DATOS BASE
+   ========================================================= */
+const SECTORES_DEFAULT = [
+  {id:'s1',nombre:'Félix Ríos',coord:'Jhon Álvarez',tel:''},
+  {id:'s2',nombre:'Rosalinda',coord:'Maggie',tel:''},
+  {id:'s3',nombre:'Malabar',coord:'Rosa Farías',tel:''},
+  {id:'s4',nombre:'Roble',coord:'Augusto Salazar',tel:''},
+  {id:'s5',nombre:'Charal',coord:'Giovanni',tel:''},
+  {id:'s6',nombre:'Mata Verde',coord:'Ángela',tel:''},
+  {id:'s7',nombre:'Cerritos',coord:'Baldwyn / Nico',tel:''},
+  {id:'s8',nombre:'Araguaney',coord:'María Jiménez',tel:''},
+  {id:'s9',nombre:'La Culebra',coord:'Margarita',tel:''},
+  {id:'s10',nombre:'Aguitas',coord:'La Nena',tel:''},
+  {id:'s11',nombre:'Simón Bolívar',coord:'Felicia',tel:''},
+];
+ 
+const SECS_DEFAULT = [
+  {cargo:'Secretario de Organización',nombre:''},
+  {cargo:'Secretario de Comunicación',nombre:''},
+  {cargo:'Secretario Gremial',nombre:''},
+  {cargo:'Secretario Sindical',nombre:''},
+  {cargo:'Secretario de Acción Política',nombre:''},
+  {cargo:'Secretario de Formación',nombre:''},
+  {cargo:'Secretario de Salud',nombre:'Nicoisa Andrea'},
+  {cargo:'Secretario de Jóvenes',nombre:''},
+  {cargo:'Secretario de Mujeres',nombre:'Rosa Farías'},
+  {cargo:'Secretario Agropecuario',nombre:''},
+  {cargo:'Secretario de Asuntos Sociales',nombre:''},
+  {cargo:'Secretario de Activismo',nombre:''},
+  {cargo:'Secretario Electoral',nombre:''},
+  {cargo:'Secretario de Deporte',nombre:''},
+  {cargo:'Secretario Adulto Mayor',nombre:''},
+  {cargo:'Secretario Religión Católica',nombre:''},
+  {cargo:'Secretario Religión Cristiana',nombre:''},
+  {cargo:'Secretaria de Cultura',nombre:''},
+  {cargo:'Secretaria de Turismo',nombre:''},
+  {cargo:'Secretaria Ecológica Sustentable',nombre:''},
+];
+ 
+const CENTROS_DATA = [
+  {nombre:'UNIDAD EDUCATIVA SANTÍSIMA TRINIDAD',mesas:5,electores:4106},
+  {nombre:'ESCUELA BÁSICA LICENCIADA ELISA GUEVARA DE CÁCERES',mesas:3,electores:2751},
+  {nombre:'JARDÍN DE INFANCIA LAS AGUITAS',mesas:4,electores:3079},
+  {nombre:'INSTITUTO DE EDUCACIÓN ESPECIAL LAS AGUITAS',mesas:3,electores:2411},
+  {nombre:'LICEO NACIONAL BOLIVARIANO ANDRÉS BELLO',mesas:6,electores:5109},
+  {nombre:'ESCUELA BÁSICA NACIONAL LAS AGUITAS I Y II JULIO GARMENDIA',mesas:3,electores:2352},
+  {nombre:'ANEXO RURAL 6',mesas:4,electores:3062},
+  {nombre:'MARÍA FIDELA CHIRINOS',mesas:2,electores:1633},
+  {nombre:'GRUPO ESCOLAR BATALLA DE AYACUCHO',mesas:6,electores:2134},
+  {nombre:'PRE-ESCOLAR BATALLA DE JUNÍN',mesas:6,electores:5912},
+  {nombre:'GRUPO ESCOLAR YORACO',mesas:7,electores:6161},
+  {nombre:'UNIDAD EDUCATIVA LICEO BOLIVARIANO LA GLORIETA',mesas:1,electores:856},
+  {nombre:'UNIDAD EDUCATIVA SIMÓN JOSÉ GUEDEZ ORTIZ',mesas:2,electores:1065},
+  {nombre:'ESCUELA NACIONAL PIRITAL',mesas:2,electores:1214},
+  {nombre:'JARDÍN DE INFANCIA CABRIALES',mesas:4,electores:3006},
+  {nombre:'ESCUELA BÁSICA NACIONAL BOLIVARIANA LOS CERRITOS',mesas:5,electores:4495},
+  {nombre:'UNIDAD EDUCATIVA ESTADAL MARÍA ESCAMILLO',mesas:1,electores:893},
+  {nombre:'ESCUELA BÁSICA NACIONAL BOLIVARIANA LAS AGUITAS III',mesas:5,electores:4381},
+  {nombre:'UNIDAD BÁSICA RAMONA DE ROMERO',mesas:3,electores:2906},
+  {nombre:'GRUPO ESCOLAR LOS HIJOS DE BOLÍVAR',mesas:3,electores:2892},
+  {nombre:'ESCUELA BOLIVARIANA LOS CERRITOS',mesas:8,electores:6933},
+  {nombre:'UNIDAD EDUCATIVA BOLIVARIANA RURAL LA DIOSA DE LOS TACARIGUAS',mesas:1,electores:755},
+  {nombre:'UNIDAD EDUCATIVA ANTONIO JOSÉ DE SUCRE',mesas:4,electores:3974},
+  {nombre:'UNIDAD EDUCATIVA LUISA TERESA DE MONTEMAYOR',mesas:4,electores:3238},
+  {nombre:'ESCUELA BÁSICA ARTURO USLAR PIETRI',mesas:3,electores:2320},
+  {nombre:'PRE-ESCOLAR TACARIGUA I',mesas:3,electores:2985},
+  {nombre:'ESCUELA TECNOLÓGICA RURAL FRANCISCO DE MIRANDA',mesas:2,electores:1155},
+  {nombre:'UNIDAD EDUCATIVA DIVINO NIÑO',mesas:2,electores:1866},
+  {nombre:'UNIDAD EDUCATIVA MANUELA SÁENZ',mesas:1,electores:993},
+  {nombre:'JARDÍN DE INFANCIA EL ROBLE',mesas:3,electores:2117},
+  {nombre:'ESCUELA DE ESPECIALIDADES FEMENINAS',mesas:2,electores:1411},
+  {nombre:'CENTRO EDUCACIÓN INICIAL GUAPARO',mesas:2,electores:1689},
+  {nombre:'ESCUELA BOLIVARIANA NACIONAL LA UNIÓN',mesas:2,electores:1048},
+  {nombre:'ESCUELA BÁSICA ESTADAL MIGUEL OTERO SILVA',mesas:1,electores:815},
+  {nombre:'UNIDAD EDUCATIVA VICENTE EMPARÁN',mesas:2,electores:1349},
+  {nombre:'MATERNAL PANCHITO MANDEFUA',mesas:2,electores:1401},
+  {nombre:'ESCUELA BÁSICA JUAN VICENTE GONZÁLEZ DELGADO',mesas:2,electores:1876},
+  {nombre:'CENTRO EDUCACIÓN INICIAL LIBERTADOR',mesas:1,electores:869},
+  {nombre:'CENTRO DE ATENCIÓN PARA NIÑOS, NIÑAS, JÓVENES Y ADOLESCENTES CON DIFICULTADES DE APRENDIZAJE',mesas:3,electores:2222},
+  {nombre:'ESCUELA BÁSICA EL ROBLE',mesas:1,electores:639},
+  {nombre:'CENTRO DE VOTACIÓN 23 DE ENERO',mesas:2,electores:1223},
+  {nombre:'CENTRO DE VOTACIÓN 12 DE MARZO',mesas:1,electores:580},
+  {nombre:'BASE DE MISIÓN SANTA ROSA ALÍ PRIMERA',mesas:1,electores:250},
+  {nombre:'CENTRO DE EDUCACIÓN INICIAL SIMONCITO ARAGUITA',mesas:1,electores:351},
+  {nombre:'PRE-ESCOLAR LA ALEGRÍA',mesas:1,electores:370},
+  {nombre:'PRE-ESCOLAR ZAIDA CEDEÑO',mesas:1,electores:457},
+];
+ 
+/* =========================================================
+   ESTADO
+   ========================================================= */
+let state = {
+  sectores: JSON.parse(localStorage.getItem('sectores') || 'null') || SECTORES_DEFAULT,
+  cdm_secs: JSON.parse(localStorage.getItem('cdm_secs') || 'null') || JSON.parse(JSON.stringify(SECS_DEFAULT)),
+  cdp_secs: JSON.parse(localStorage.getItem('cdp_secs') || 'null') || JSON.parse(JSON.stringify(SECS_DEFAULT)),
+  cdm_coord: localStorage.getItem('cdm_coord') || 'Jhon Álvarez',
+  cdm_sec: localStorage.getItem('cdm_sec') || 'Augusto Salazar',
+  cdp_coord: localStorage.getItem('cdp_coord') || 'Daniela Torrealba',
+  cdp_sec: localStorage.getItem('cdp_sec') || '',
+  centros: JSON.parse(localStorage.getItem('centros') || 'null') || CENTROS_DATA.map(c=>({...c,responsables:{}})),
+  modalCtx: null
+};
+ 
+function save(){
+  localStorage.setItem('sectores', JSON.stringify(state.sectores));
+  localStorage.setItem('cdm_secs', JSON.stringify(state.cdm_secs));
+  localStorage.setItem('cdp_secs', JSON.stringify(state.cdp_secs));
+  localStorage.setItem('cdm_coord', state.cdm_coord);
+  localStorage.setItem('cdm_sec', state.cdm_sec);
+  localStorage.setItem('cdp_coord', state.cdp_coord);
+  localStorage.setItem('cdp_sec', state.cdp_sec);
+  localStorage.setItem('centros', JSON.stringify(state.centros));
+}
+ 
+/* =========================================================
+   NAVEGACIÓN
+   ========================================================= */
+function showSection(id){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.getElementById('sec-'+id).classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  const btns = document.querySelectorAll('.nav-btn');
+  btns.forEach(b=>{ if(b.getAttribute('onclick')&&b.getAttribute('onclick').includes(id)) b.classList.add('active'); });
+  // cerrar sidebar en móvil
+  document.getElementById('sidebar').classList.remove('open');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+ 
+function toggleSidebar(){
+  document.getElementById('sidebar').classList.toggle('open');
+}
+ 
+/* =========================================================
+   TABS (CDM/CDP)
+   ========================================================= */
+function switchTab(tab, btn){
+  document.getElementById('tab-cdm').style.display = tab==='cdm'?'block':'none';
+  document.getElementById('tab-cdp').style.display = tab==='cdp'?'block':'none';
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+}
+ 
+/* =========================================================
+   SIDEBAR — SECTORES
+   ========================================================= */
+function renderSectores(){
+  const list = document.getElementById('sectores-list');
+  list.innerHTML = state.sectores.map((s,i)=>`
+    <div class="sector-card" id="sc-${i}">
+      <div class="sector-header" onclick="toggleSector(${i})">
+        <div>
+          <div class="sector-name">${s.nombre}</div>
+          <div class="sector-coord">${s.coord||'Sin coordinador'}</div>
+        </div>
+        <div class="sector-toggle">▾</div>
+      </div>
+      <div class="sector-body">
+        <div class="sector-info">Coordinador: <span>${s.coord||'—'}</span></div>
+        ${s.tel?`<div class="sector-info">WhatsApp: <span>${s.tel}</span></div>`:''}
+        <button style="font-size:.68rem;color:var(--gris-60);background:none;border:none;text-decoration:underline;cursor:pointer;margin-top:4px;" onclick="deleteSector(${i})">Eliminar sector</button>
+      </div>
+    </div>
+  `).join('');
+}
+ 
+function toggleSector(i){
+  const card = document.getElementById('sc-'+i);
+  card.classList.toggle('open');
+}
+ 
+function deleteSector(i){
+  if(confirm('¿Eliminar este sector?')){
+    state.sectores.splice(i,1);
+    save(); renderSectores(); showToast('Sector eliminado');
+  }
+}
+ 
+/* =========================================================
+   ORGANIGRAMA — SECRETARÍAS
+   ========================================================= */
+function renderSecs(comite){
+  const list = state[comite+'_secs'];
+  const el = document.getElementById(comite+'-secs');
+  if(!el) return;
+  el.innerHTML = list.map((s,i)=>`
+    <div class="org-sec" id="${comite}-sec-${i}">
+      <div class="org-sec-header" onclick="toggleOrgSec('${comite}',${i})">
+        <div>
+          <div class="org-sec-cargo">${s.cargo}</div>
+          <div class="org-sec-nombre">${s.nombre||'Sin asignar'}</div>
+        </div>
+        <span style="font-size:.7rem;color:var(--gris-60)">▾</span>
+      </div>
+      <div class="org-sec-body">
+        <div style="margin-bottom:8px;">
+          <input class="form-input" style="width:100%;font-size:.72rem;" placeholder="Nombre y apellido"
+            value="${s.nombre||''}"
+            onchange="updateSecNombre('${comite}',${i},this.value)"/>
+        </div>
+        <div class="mesas-title">Propuestas</div>
+        <ul class="prop-list" id="${comite}-props-${i}">
+          ${(s.propuestas||[]).map(p=>`<li>${p}</li>`).join('')}
+        </ul>
+        <div class="add-prop">
+          <input type="text" placeholder="Nueva propuesta..." id="${comite}-pinput-${i}"/>
+          <button onclick="addProp('${comite}',${i})">+</button>
+        </div>
+        <button style="font-size:.65rem;color:var(--gris-60);background:none;border:none;text-decoration:underline;cursor:pointer;margin-top:6px;" onclick="deleteSec('${comite}',${i})">Eliminar</button>
+      </div>
+    </div>
+  `).join('');
+  // actualizar nombres en nodos top
+  if(comite==='cdm'){
+    document.getElementById('cdm-coord-nombre').textContent = state.cdm_coord||'Jhon Álvarez';
+    document.getElementById('cdm-sec-nombre').textContent = state.cdm_sec||'Augusto Salazar';
+  } else {
+    document.getElementById('cdp-coord-nombre').textContent = state.cdp_coord||'Daniela Torrealba';
+    const el2 = document.getElementById('cdp-sec-nombre');
+    el2.textContent = state.cdp_sec||'Sin asignar';
+    el2.className = 'nombre'+(state.cdp_sec?'':' vacio');
+  }
+}
+ 
+function toggleOrgSec(comite, i){
+  document.getElementById(comite+'-sec-'+i).classList.toggle('open');
+}
+ 
+function updateSecNombre(comite, i, val){
+  state[comite+'_secs'][i].nombre = val;
+  save();
+  renderSecs(comite);
+}
+ 
+function addProp(comite, i){
+  const inp = document.getElementById(comite+'-pinput-'+i);
+  if(!inp.value.trim()) return;
+  if(!state[comite+'_secs'][i].propuestas) state[comite+'_secs'][i].propuestas=[];
+  state[comite+'_secs'][i].propuestas.push(inp.value.trim());
+  inp.value='';
+  save(); renderSecs(comite);
+  showToast('Propuesta agregada');
+}
+ 
+function deleteSec(comite, i){
+  if(confirm('¿Eliminar esta secretaría?')){
+    state[comite+'_secs'].splice(i,1);
+    save(); renderSecs(comite);
+    showToast('Secretaría eliminada');
+  }
+}
+ 
+/* =========================================================
+   NODOS TOP — EDITAR
+   ========================================================= */
+function editNode(nodeId, cargo){
+  const keys = {
+    'cdm-coord':'cdm_coord','cdm-sec':'cdm_sec',
+    'cdp-coord':'cdp_coord','cdp-sec':'cdp_sec'
+  };
+  const key = keys[nodeId];
+  openModalCustom('Editar: '+cargo, `
+    <div class="modal-field">
+      <label class="modal-label">Nombre y Apellido</label>
+      <input class="modal-input" id="edit-node-val" value="${state[key]||''}"/>
+    </div>
+    <button class="modal-submit" onclick="saveNode('${key}','${nodeId}')">Guardar</button>
+  `);
+}
+ 
+function saveNode(key, nodeId){
+  const val = document.getElementById('edit-node-val').value.trim();
+  state[key] = val;
+  save();
+  const comite = nodeId.startsWith('cdm')?'cdm':'cdp';
+  renderSecs(comite);
+  closeModal();
+  showToast('Actualizado');
+}
+ 
+/* =========================================================
+   CENTROS ELECTORALES
+   ========================================================= */
+function calcTotals(){
+  let totalV=0, totalM=0;
+  CENTROS_DATA.forEach(c=>{totalV+=c.electores;totalM+=c.mesas;});
+  ['total-votantes-stat','total-votantes-pill'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el) el.textContent=totalV.toLocaleString('es-VE');
+  });
+  ['total-mesas-stat','total-mesas-pill'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el) el.textContent=totalM;
+  });
+}
+ 
+function renderCentros(filter=''){
+  const grid = document.getElementById('centros-grid');
+  const filtered = state.centros.filter(c=>c.nombre.toLowerCase().includes(filter.toLowerCase()));
+  grid.innerHTML = filtered.map((c,idx)=>{
+    const ri = state.centros.indexOf(c);
+    const r = c.responsables||{};
+    const mesasHtml = Array.from({length:c.mesas},(_,m)=>`
+      <div class="mesa-item">
+        <div class="mesa-num">Mesa ${m+1}</div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Vocero</label>
+            <input class="form-input" placeholder="Nombre" value="${(r['vocero_'+(m+1)])||''}"
+              onchange="updateCentroField(${ri},'vocero_'+(${m}+1),this.value)"/>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Adjunto</label>
+            <input class="form-input" placeholder="Nombre" value="${(r['adjunto_'+(m+1)])||''}"
+              onchange="updateCentroField(${ri},'adjunto_'+(${m}+1),this.value)"/>
+          </div>
+        </div>
+      </div>
+    `).join('');
+ 
+    return `
+    <div class="centro-card" id="cc-${ri}">
+      <div class="centro-card-head" onclick="toggleCentro(${ri})">
+        <div style="flex:1">
+          <div class="centro-nombre">${c.nombre}</div>
+          <div class="centro-meta">
+            <span class="centro-pill">${c.mesas} mesa${c.mesas>1?'s':''}</span>
+            <span class="centro-pill verde">${c.electores.toLocaleString('es-VE')} electores</span>
+          </div>
+        </div>
+        <div class="centro-toggle-icon">▾</div>
+      </div>
+      <div class="centro-body">
+        <div class="centro-form">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Coordinador de Centro 1</label>
+              <input class="form-input" placeholder="Nombre" value="${r.coord1||''}"
+                onchange="updateCentroField(${ri},'coord1',this.value)"/>
             </div>
-          `).join('');
-            updateStats();
-        }
-
-        window.toggleCentro = function(i) {
-            const card = document.getElementById('centroCard' + i);
-            card.classList.toggle('expanded');
-        };
-
-        window.saveCentro = function(i) {
-            centros[i].coord1 = document.getElementById('cc1_' + i).value.trim();
-            centros[i].coord2 = document.getElementById('cc2_' + i).value.trim();
-            centros[i].coordPolitico = document.getElementById('ccp_' + i).value.trim();
-            centros[i].logistica = document.getElementById('clog_' + i).value.trim();
-            centros[i].movilizacion = document.getElementById('cmov_' + i).value.trim();
-            centros[i].voceros = document.getElementById('cvoc_' + i).value.split(',').map(s => s.trim()).filter(Boolean);
-            centros[i].adjuntos = document.getElementById('cadj_' + i).value.split(',').map(s => s.trim()).filter(
-            Boolean);
-            persistCentros();
-            showToast('✅ Centro de votación actualizado');
-        };
-
-        function updateStats() {
-            const totalMesas = centros.reduce((a, c) => a + c.mesas, 0);
-            const totalVotantes = centros.reduce((a, c) => a + c.votantes, 0);
-            document.getElementById('totalCentros').textContent = centros.length;
-            document.getElementById('totalMesas').textContent = totalMesas;
-            document.getElementById('totalVotantes').textContent = totalVotantes.toLocaleString();
-        }
-
-        // ==================== RENDER CDM / CDP ====================
-        function renderOrgTree(containerId, data, persistFn, prefix) {
-            const container = document.getElementById(containerId);
-            container.innerHTML = data.map((item, i) => `
-            <div class="org-node">
-              <div class="node-title">📋 ${escHTML(item.position)}</div>
-              <div class="node-person">${item.person ? '👤 ' + escHTML(item.person) : '<span style="color:#a0aec0;">Vacante</span>'}</div>
-              ${item.proposals && item.proposals.length > 0 ? `
-                <ul class="propuestas-list">
-                  ${item.proposals.map((p, pi) => `<li>💡 ${escHTML(p)} <button onclick="deletePropuesta('${prefix}',${i},${pi})">✕</button></li>`).join('')}
-                </ul>
-              ` : '<p style="font-size:0.7rem;color:#a0aec0;margin-top:2px;">Sin propuestas</p>'}
-              <div class="node-actions">
-                <button onclick="editOrgPerson('${prefix}',${i})">✏️ Editar</button>
-                <button onclick="addPropuesta('${prefix}',${i})">💡 +Propuesta</button>
-                <button class="del" onclick="deleteOrgNode('${prefix}',${i})">🗑️</button>
-              </div>
+            <div class="form-group">
+              <label class="form-label">Coordinador de Centro 2</label>
+              <input class="form-input" placeholder="Nombre" value="${r.coord2||''}"
+                onchange="updateCentroField(${ri},'coord2',this.value)"/>
             </div>
-          `).join('');
-        }
-
-        function renderCDM() { renderOrgTree('cdmTree', cdm, persistCDM, 'cdm'); }
-
-        function renderCDP() { renderOrgTree('cdpTree', cdp, persistCDP, 'cdp'); }
-
-        window.editOrgPerson = function(prefix, i) {
-            const data = prefix === 'cdm' ? cdm : cdp;
-            const persistFn = prefix === 'cdm' ? persistCDM : persistCDP;
-            const renderFn = prefix === 'cdm' ? renderCDM : renderCDP;
-            showModal('Editar ' + data[i].position, `
-            <input id="modPersonName" value="${escHTML(data[i].person||'')}" placeholder="Nombre y apellido">
-          `, () => {
-                data[i].person = document.getElementById('modPersonName').value.trim();
-                persistFn();
-                renderFn();
-                closeModal();
-                showToast('✅ Actualizado');
-            });
-        };
-
-        window.addPropuesta = function(prefix, i) {
-            const data = prefix === 'cdm' ? cdm : cdp;
-            const persistFn = prefix === 'cdm' ? persistCDM : persistCDP;
-            const renderFn = prefix === 'cdm' ? renderCDM : renderCDP;
-            showModal('Agregar Propuesta — ' + data[i].position, `
-            <input id="modPropuesta" placeholder="Describa la propuesta">
-          `, () => {
-                const prop = document.getElementById('modPropuesta').value.trim();
-                if (!prop) { showToast('⚠️ La propuesta no puede estar vacía'); return; }
-                if (!data[i].proposals) data[i].proposals = [];
-                data[i].proposals.push(prop);
-                persistFn();
-                renderFn();
-                closeModal();
-                showToast('✅ Propuesta agregada');
-            });
-        };
-
-        window.deletePropuesta = function(prefix, i, pi) {
-            const data = prefix === 'cdm' ? cdm : cdp;
-            const persistFn = prefix === 'cdm' ? persistCDM : persistCDP;
-            const renderFn = prefix === 'cdm' ? renderCDM : renderCDP;
-            data[i].proposals.splice(pi, 1);
-            persistFn();
-            renderFn();
-            showToast('🗑️ Propuesta eliminada');
-        };
-
-        window.deleteOrgNode = function(prefix, i) {
-            const data = prefix === 'cdm' ? cdm : cdp;
-            const persistFn = prefix === 'cdm' ? persistCDM : persistCDP;
-            const renderFn = prefix === 'cdm' ? renderCDM : renderCDP;
-            if (confirm('¿Eliminar "' + data[i].position + '"? Esta acción no se puede deshacer.')) {
-                data.splice(i, 1);
-                persistFn();
-                renderFn();
-                showToast('🗑️ Secretaría eliminada');
-            }
-        };
-
-        document.getElementById('addSecretariaBtn').addEventListener('click', () => {
-            showModal('Agregar Nueva Secretaría', `
-            <p style="font-size:0.8rem;color:var(--gris-texto);margin-bottom:8px;">Se agregará al <strong>CDM</strong> (Comité Directivo Municipal).</p>
-            <input id="modSecName" placeholder="Nombre de la secretaría (ej: Secretario de ...)">
-            <input id="modSecPerson" placeholder="Nombre y apellido (opcional)">
-          `, () => {
-                const name = document.getElementById('modSecName').value.trim();
-                const person = document.getElementById('modSecPerson').value.trim();
-                if (!name) { showToast('⚠️ El nombre de la secretaría es obligatorio'); return; }
-                cdm.push({ position: name, person: person, proposals: [] });
-                persistCDM();
-                renderCDM();
-                closeModal();
-                showToast('✅ Secretaría agregada al CDM');
-            });
-        });
-
-        // ==================== MODAL ====================
-        let modalCallback = null;
-
-        function showModal(title, bodyHTML, callback) {
-            const overlay = document.getElementById('modalOverlay');
-            const content = document.getElementById('modalContent');
-            content.innerHTML = `
-            <h4>${title}</h4>
-            ${bodyHTML}
-            <div class="modal-buttons">
-              <button class="btn-secondary" onclick="closeModal()">Cancelar</button>
-              <button class="btn-primary" id="modalConfirmBtn">Confirmar</button>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Coordinador Político</label>
+              <input class="form-input" placeholder="Nombre" value="${r.coordpol||''}"
+                onchange="updateCentroField(${ri},'coordpol',this.value)"/>
             </div>
-          `;
-            modalCallback = callback;
-            overlay.classList.add('active');
-            document.getElementById('modalConfirmBtn').addEventListener('click', () => {
-                if (modalCallback) modalCallback();
-            });
-        }
-
-        window.closeModal = function() {
-            document.getElementById('modalOverlay').classList.remove('active');
-            modalCallback = null;
-        };
-        document.getElementById('modalOverlay').addEventListener('click', function(e) {
-            if (e.target === this) closeModal();
-        });
-
-        // ==================== PANEL NOSOTROS ====================
-        const panelNosotros = document.getElementById('panelNosotros');
-        const panelOverlay = document.getElementById('panelOverlay');
-        const btnNosotros = document.getElementById('btnNosotros');
-        const panelClose = document.getElementById('panelClose');
-
-        function openPanel() {
-            panelNosotros.classList.add('active');
-            panelOverlay.classList.add('active');
-            document.body.style.overflow = 'hidden';
-            renderCDM();
-            renderCDP();
-        }
-
-        function closePanel() {
-            panelNosotros.classList.remove('active');
-            panelOverlay.classList.remove('active');
-            document.body.style.overflow = '';
-        }
-        btnNosotros.addEventListener('click', openPanel);
-        panelClose.addEventListener('click', closePanel);
-        panelOverlay.addEventListener('click', function(e) {
-            if (e.target === this) closePanel();
-        });
-
-        // ==================== SIDEBAR MOBILE ====================
-        const sidebar = document.getElementById('sidebar');
-        const sidebarOverlay = document.getElementById('sidebarOverlay');
-        const menuToggle = document.getElementById('menuToggle');
-
-        function openSidebar() {
-            sidebar.classList.add('open');
-            sidebarOverlay.classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeSidebar() {
-            sidebar.classList.remove('open');
-            sidebarOverlay.classList.remove('active');
-            document.body.style.overflow = '';
-        }
-        menuToggle.addEventListener('click', () => {
-            if (sidebar.classList.contains('open')) closeSidebar();
-            else openSidebar();
-        });
-        sidebarOverlay.addEventListener('click', closeSidebar);
-
-        // Cerrar sidebar al hacer clic en un sector (en móvil)
-        document.getElementById('sectorList').addEventListener('click', function(e) {
-            if (window.innerWidth <= 1024 && (e.target.closest('.sector-actions') || e.target.closest(
-                    '.sector-item'))) {
-                setTimeout(closeSidebar, 200);
-            }
-        });
-
-        // ==================== HEADER SCROLL ====================
-        const header = document.getElementById('header');
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 10) header.classList.add('scrolled');
-            else header.classList.remove('scrolled');
-        });
-
-        // ==================== TECLA ESC ====================
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                if (panelNosotros.classList.contains('active')) closePanel();
-                if (document.getElementById('modalOverlay').classList.contains('active')) closeModal();
-                if (sidebar.classList.contains('open')) closeSidebar();
-            }
-        });
-
-        // ==================== INICIALIZAR ====================
-        function init() {
-            renderSidebar();
-            renderCentros();
-            updateStats();
-        }
-        init();
-
-        // Exponer funciones globales necesarias
-        window.editSector = window.editSector;
-        window.deleteSector = window.deleteSector;
-        window.toggleCentro = window.toggleCentro;
-        window.saveCentro = window.saveCentro;
-        window.editOrgPerson = window.editOrgPerson;
-        window.addPropuesta = window.addPropuesta;
-        window.deletePropuesta = window.deletePropuesta;
-        window.deleteOrgNode = window.deleteOrgNode;
-        window.closeModal = window.closeModal;
-
-        console.log('🚀 Concertación Los Guayos — Portal Estratégico Municipal listo.');
-        console.log('📊 Centros de votación:', centros.length);
-        console.log('📋 Sectores:', sectores.length);
-        console.log('🏛️ CDM:', cdm.length, 'secretarías');
-        console.log('📍 CDP:', cdp.length, 'secretarías');
-        console.log('💾 Datos guardados en LocalStorage.');
-    })();
+            <div class="form-group">
+              <label class="form-label">WhatsApp</label>
+              <input class="form-input" placeholder="+58..." value="${r.wsp||''}"
+                onchange="updateCentroField(${ri},'wsp',this.value)"/>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Logística</label>
+              <input class="form-input" placeholder="Nombre" value="${r.logistica||''}"
+                onchange="updateCentroField(${ri},'logistica',this.value)"/>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Movilización</label>
+              <input class="form-input" placeholder="Nombre" value="${r.movilizacion||''}"
+                onchange="updateCentroField(${ri},'movilizacion',this.value)"/>
+            </div>
+          </div>
+          <div class="mesas-section">
+            <div class="mesas-title">Mesas — Voceros y Adjuntos</div>
+            ${mesasHtml}
+          </div>
+          <button class="save-centro-btn" id="save-btn-${ri}" onclick="saveCentro(${ri})">Guardar cambios</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+ 
+function toggleCentro(i){
+  document.getElementById('cc-'+i).classList.toggle('open');
+}
+ 
+function updateCentroField(i, field, val){
+  if(!state.centros[i].responsables) state.centros[i].responsables={};
+  state.centros[i].responsables[field] = val;
+}
+ 
+function saveCentro(i){
+  save();
+  const btn = document.getElementById('save-btn-'+i);
+  btn.textContent='✓ Guardado';
+  btn.classList.add('saved');
+  setTimeout(()=>{btn.textContent='Guardar cambios';btn.classList.remove('saved');},2000);
+  showToast('Centro guardado');
+}
+ 
+function filterCentros(){
+  const val = document.getElementById('centro-search').value;
+  renderCentros(val);
+}
+ 
+/* =========================================================
+   MODAL
+   ========================================================= */
+function openModal(type, extra){
+  const overlay = document.getElementById('modal');
+  const title = document.getElementById('modal-title');
+  const body = document.getElementById('modal-body');
+  state.modalCtx = {type, extra};
+ 
+  if(type==='sector'){
+    title.textContent='Agregar Sector';
+    body.innerHTML=`
+      <div class="modal-field">
+        <label class="modal-label">Nombre del Sector</label>
+        <input class="modal-input" id="m-sector-nombre" placeholder="Ej: Los Mangos"/>
+      </div>
+      <div class="modal-field">
+        <label class="modal-label">Coordinador</label>
+        <input class="modal-input" id="m-sector-coord" placeholder="Nombre y apellido"/>
+      </div>
+      <div class="modal-field">
+        <label class="modal-label">WhatsApp</label>
+        <input class="modal-input" id="m-sector-tel" placeholder="+58..."/>
+      </div>
+      <button class="modal-submit" onclick="submitModal()">Agregar Sector</button>
+    `;
+  } else if(type==='secretaria'){
+    title.textContent='Agregar Secretaría';
+    body.innerHTML=`
+      <div class="modal-field">
+        <label class="modal-label">Nombre de la Secretaría</label>
+        <input class="modal-input" id="m-sec-cargo" placeholder="Ej: Secretario de Cultura"/>
+      </div>
+      <div class="modal-field">
+        <label class="modal-label">Responsable</label>
+        <input class="modal-input" id="m-sec-nombre" placeholder="Nombre y apellido"/>
+      </div>
+      <button class="modal-submit" onclick="submitModal()">Agregar Secretaría</button>
+    `;
+  }
+  overlay.classList.add('open');
+}
+ 
+function openModalCustom(title, html){
+  document.getElementById('modal-title').textContent = title;
+  document.getElementById('modal-body').innerHTML = html;
+  document.getElementById('modal').classList.add('open');
+}
+ 
+function closeModal(){
+  document.getElementById('modal').classList.remove('open');
+}
+ 
+function closeModalOutside(e){
+  if(e.target===document.getElementById('modal')) closeModal();
+}
+ 
+function submitModal(){
+  const ctx = state.modalCtx;
+  if(ctx.type==='sector'){
+    const nombre = document.getElementById('m-sector-nombre').value.trim();
+    if(!nombre){alert('Ingrese el nombre del sector');return;}
+    state.sectores.push({
+      id:'s'+Date.now(),
+      nombre,
+      coord:document.getElementById('m-sector-coord').value.trim(),
+      tel:document.getElementById('m-sector-tel').value.trim()
+    });
+    save(); renderSectores();
+  } else if(ctx.type==='secretaria'){
+    const cargo = document.getElementById('m-sec-cargo').value.trim();
+    if(!cargo){alert('Ingrese el nombre de la secretaría');return;}
+    const comite = ctx.extra;
+    state[comite+'_secs'].push({
+      cargo,
+      nombre:document.getElementById('m-sec-nombre').value.trim(),
+      propuestas:[]
+    });
+    save(); renderSecs(comite);
+  }
+  closeModal();
+  showToast('Agregado exitosamente');
+}
+ 
+/* =========================================================
+   TOAST
+   ========================================================= */
+function showToast(msg='✓ Guardado'){
+  const t = document.getElementById('toast');
+  t.textContent = '✓ '+msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 2800);
+}
+ 
+/* =========================================================
+   INIT
+   ========================================================= */
+function init(){
+  calcTotals();
+  renderSectores();
+  renderSecs('cdm');
+  renderSecs('cdp');
+  renderCentros();
+}
+ 
+document.addEventListener('DOMContentLoaded', init);
 </script>
 </body>
 </html>
